@@ -17,14 +17,12 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);font-family:var(--sans);color:var(--dark);min-height:100vh;}
 
-/* HEADER */
 header{background:var(--dark);padding:0 32px;height:66px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 16px rgba(0,0,0,0.25);position:sticky;top:0;z-index:100;}
 .header-left{display:flex;align-items:center;gap:14px;}
 .logo{width:38px;height:38px;border-radius:9px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:20px;}
 .header-title{font-family:var(--serif);font-size:19px;color:#fff;letter-spacing:0.3px;}
 .header-sub{font-size:11px;color:#8888aa;letter-spacing:1px;text-transform:uppercase;margin-top:1px;}
 
-/* BUTTONS */
 .btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;cursor:pointer;border:none;transition:opacity .15s,transform .1s;}
 .btn:hover{opacity:.88;transform:translateY(-1px);}
 .btn-primary{background:var(--red);color:#fff;}
@@ -35,8 +33,7 @@ header{background:var(--dark);padding:0 32px;height:66px;display:flex;align-item
 .btn-danger{background:var(--red-light);color:var(--red);border:1px solid var(--red-border);}
 .btn-sm{padding:6px 12px;font-size:12px;}
 
-/* LAYOUT */
-main{max-width:900px;margin:0 auto;padding:28px 24px;}
+main{max-width:920px;margin:0 auto;padding:28px 24px;}
 
 /* QB BANNER */
 .qb-banner{background:var(--blue-light);border:1.5px solid var(--blue-border);border-radius:12px;padding:16px 20px;margin-bottom:22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
@@ -66,10 +63,14 @@ main{max-width:900px;margin:0 auto;padding:28px 24px;}
 
 /* CARDS */
 .hold-list{display:flex;flex-direction:column;gap:10px;}
-.hold-card{background:var(--card);border-radius:13px;border:1.5px solid var(--border);padding:18px 20px;display:flex;align-items:flex-start;gap:16px;box-shadow:0 2px 10px rgba(0,0,0,.04);transition:box-shadow .2s;}
+.hold-card{background:var(--card);border-radius:13px;border:1.5px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.04);transition:box-shadow .2s;overflow:hidden;}
 .hold-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.09);}
 .hold-card.on-hold{border-color:var(--red-border);}
 .hold-card.resolved{border-color:var(--green-border);opacity:.85;}
+
+/* CARD HEADER — clickable to expand */
+.card-header{padding:18px 20px;display:flex;align-items:flex-start;gap:16px;cursor:pointer;user-select:none;}
+.card-header:hover .customer-name{text-decoration:underline;text-decoration-color:rgba(0,0,0,0.2);}
 .accent-bar{width:4px;border-radius:4px;align-self:stretch;flex-shrink:0;}
 .on-hold .accent-bar{background:var(--red);}
 .resolved .accent-bar{background:var(--green);}
@@ -85,11 +86,27 @@ main{max-width:900px;margin:0 auto;padding:28px 24px;}
 .badge-resolved .badge-dot{background:var(--green);}
 .card-meta{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:#777;}
 .card-actions{display:flex;gap:7px;align-items:center;flex-shrink:0;flex-wrap:wrap;}
+.expand-icon{font-size:12px;color:#aaa;margin-left:4px;transition:transform .2s;display:inline-block;}
+.expanded .expand-icon{transform:rotate(180deg);}
+
+/* INVOICE DETAIL PANEL */
+.invoice-panel{display:none;border-top:1px solid var(--border);background:#fafafa;padding:0 20px 16px 40px;}
+.invoice-panel.open{display:block;}
+.invoice-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px;}
+.invoice-table th{text-align:left;padding:6px 10px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mid);border-bottom:1.5px solid var(--border);}
+.invoice-table td{padding:8px 10px;border-bottom:1px solid #f0ede6;color:#444;}
+.invoice-table tr:last-child td{border-bottom:none;}
+.invoice-table .amount{text-align:right;font-weight:600;font-family:monospace;font-size:13px;}
+.invoice-table .aging-chip{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
+.aging-31{background:#fff3cd;color:#856404;}
+.aging-61{background:#ffe0b2;color:#7c4c00;}
+.aging-90{background:var(--red-light);color:var(--red);}
+.invoice-total{display:flex;justify-content:flex-end;padding:10px 10px 0;font-weight:700;font-size:14px;color:var(--dark);}
 
 /* SYNC PREVIEW */
-.sync-preview{max-height:320px;overflow-y:auto;margin-bottom:18px;}
+.sync-preview{max-height:360px;overflow-y:auto;margin-bottom:18px;}
 .sync-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mid);margin:14px 0 8px;}
-.sync-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:4px;font-size:13.5px;}
+.sync-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:4px;font-size:13px;}
 .sync-add{background:var(--green-light);}
 .sync-resolve{background:#fff9e6;}
 .sync-keep{background:#f5f5f5;color:#888;}
@@ -97,10 +114,11 @@ main{max-width:900px;margin:0 auto;padding:28px 24px;}
 .sync-add .sync-dot{background:var(--green);}
 .sync-resolve .sync-dot{background:#f0a500;}
 .sync-keep .sync-dot{background:#bbb;}
+.warning-box{background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px 16px;font-size:13px;color:#856404;margin-bottom:16px;line-height:1.5;}
 
 /* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:500;backdrop-filter:blur(3px);}
-.modal{background:#fff;border-radius:16px;padding:34px 38px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.22);}
+.modal{background:#fff;border-radius:16px;padding:34px 38px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.22);}
 .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
 .modal-title{font-family:var(--serif);font-size:21px;color:var(--dark);}
 .modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:#aaa;line-height:1;padding:0 4px;}
@@ -113,7 +131,6 @@ main{max-width:900px;margin:0 auto;padding:28px 24px;}
 .modal-actions{display:flex;gap:10px;margin-top:6px;}
 .modal-actions .btn{flex:1;padding:12px;font-size:14px;}
 
-/* TOASTS & BARS */
 .toast{position:fixed;bottom:28px;right:28px;color:#fff;padding:13px 22px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:999;max-width:340px;}
 .toast-success{background:var(--dark);}
 .toast-error{background:var(--red);}
@@ -126,7 +143,7 @@ main{max-width:900px;margin:0 auto;padding:28px 24px;}
   header{padding:0 16px;}
   main{padding:20px 14px;}
   .modal{padding:24px 20px;margin:16px;}
-  .hold-card{flex-wrap:wrap;}
+  .invoice-panel{padding:0 12px 16px 20px;}
 }
 </style>
 </head>
@@ -147,16 +164,15 @@ main{max-width:900px;margin:0 auto;padding:28px 24px;}
 </header>
 
 <main>
-  <!-- QB banner: hidden by default, shown via JS when admin logs in -->
   <div class="qb-banner" id="qbBanner" style="display:none">
     <div class="qb-icon">📊</div>
     <div class="qb-text">
       <div class="qb-title">Sync from QuickBooks</div>
-      <div class="qb-sub">Export your A/R Aging report from QuickBooks as Excel (.xlsx), then upload it here to automatically update the hold list.</div>
+      <div class="qb-sub">Export the <strong>A/R Aging Detail</strong> report from QuickBooks as Excel (.xlsx) and upload it here. Customer cards will show individual invoice details.</div>
     </div>
     <label class="qb-label">
       📂 Upload QB Export
-      <input type="file" id="qbFileInput" accept=".xlsx,.xls,.csv" onchange="handleQBUpload(event)"/>
+      <input type="file" id="qbFileInput" accept=".xlsx,.xls" onchange="handleQBUpload(event)"/>
     </label>
   </div>
 
@@ -177,166 +193,197 @@ main{max-width:900px;margin:0 auto;padding:28px 24px;}
 <div class="toast" id="toast" style="display:none"></div>
 
 <script>
-// ── CONFIG ───────────────────────────────────────────────────
 const ADMIN_PASSWORD = "kss2000";
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCs4MK1jtf0lKb2tW6kJKncR4oizFnKo1w3WDflr_J5cwjwzlGtbjW8rrogr3xB7q6JA/exec";
 
-// ── STATE ────────────────────────────────────────────────────
 let state = {
   holds:[], mode:"viewer", filter:"active", search:"",
   modal:null, editTarget:null, resolveTarget:null, deleteTarget:null,
-  loading:true, syncPreview:null,
+  loading:true, syncPreview:null, expanded:{},
 };
 
 // ── HELPERS ──────────────────────────────────────────────────
 function fmtDate(val) {
-  if (!val) return "Unknown date";
-  // Handle YYYY-MM-DD
+  if (!val) return "";
+  if (val instanceof Date) return val.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
   if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
-    const [y,m,d] = val.split("-").map(Number);
-    return new Date(y, m-1, d).toLocaleDateString("en-US", {month:"short",day:"numeric",year:"numeric"});
+    const [y,m,d]=val.split("-").map(Number);
+    return new Date(y,m-1,d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
   }
-  // Handle M/D/YYYY or MM/DD/YYYY
   if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val)) {
-    const [m,d,y] = val.split("/").map(Number);
-    return new Date(y, m-1, d).toLocaleDateString("en-US", {month:"short",day:"numeric",year:"numeric"});
+    const [m,d,y]=val.split("/").map(Number);
+    return new Date(y,m-1,d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
   }
-  // Try generic parse
-  const d = new Date(val);
-  if (!isNaN(d)) return d.toLocaleDateString("en-US", {month:"short",day:"numeric",year:"numeric"});
-  return val; // fallback: show raw value
+  const d=new Date(val);
+  if (!isNaN(d)) return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+  return String(val);
+}
+function fmtMoney(v) {
+  if (!v && v!==0) return "$0.00";
+  return "$"+Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 function today() { return new Date().toISOString().split("T")[0]; }
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2); }
 function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-function num(v) { return (typeof v==="number" && !isNaN(v)) ? v : 0; }
 
 let toastTimer;
-function showToast(msg, type="success") {
-  const el = document.getElementById("toast");
+function showToast(msg,type="success"){
+  const el=document.getElementById("toast");
   el.textContent=msg; el.className=`toast toast-${type}`; el.style.display="block";
-  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.style.display="none", 3500);
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.style.display="none",3500);
 }
 
-// ── GOOGLE SHEETS API ────────────────────────────────────────
-async function fetchHolds() {
-  const res = await fetch(APPS_SCRIPT_URL);
-  if (!res.ok) throw new Error("Failed to load");
+// ── GOOGLE SHEETS API ─────────────────────────────────────────
+async function fetchHolds(){
+  const res=await fetch(APPS_SCRIPT_URL);
+  if(!res.ok) throw new Error("Failed to load");
   return await res.json();
 }
-async function saveHolds(holds) {
-  const res = await fetch(APPS_SCRIPT_URL, {method:"POST", body:JSON.stringify({action:"save",holds})});
-  if (!res.ok) throw new Error("Failed to save");
+async function saveHolds(holds){
+  const res=await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify({action:"save",holds})});
+  if(!res.ok) throw new Error("Failed to save");
 }
 
-// ── QB SYNC ──────────────────────────────────────────────────
-// QB A/R Aging export column layout (0-indexed after sheet_to_json):
-// [1]=Customer Name, [2]=Current, [4]=1-30, [6]=31-60, [8]=61-90, [10]=>90
-function handleQBUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const wb = XLSX.read(new Uint8Array(e.target.result), {type:"array"});
-      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:0});
-      const overdueFromQB = [];
-      for (let i=1; i<rows.length; i++) {
-        const row = rows[i];
-        const name = row[1];
-        if (!name || typeof name!=="string" || !name.trim()) continue;
-        const trimmed = name.trim();
-        if (["A/R Clearing","Account Adjustment","TOTAL","Workders Comp"].includes(trimmed)) continue;
-        // Try both possible column offsets (some QB exports have None columns)
-        const d31a=num(row[4]),  d61a=num(row[6]),  d90a=num(row[8]);
-        const d31b=num(row[6]),  d61b=num(row[8]),  d90b=num(row[10]);
-        const d31=Math.max(d31a,d31b), d61=Math.max(d61a,d61b), d90=Math.max(d90a,d90b);
-        if (d31>0 || d61>0 || d90>0) {
-          const aging=[];
-          if(d31>0) aging.push("31-60 days");
-          if(d61>0) aging.push("61-90 days");
-          if(d90>0) aging.push(">90 days");
-          overdueFromQB.push({name:trimmed, total:d31+d61+d90, aging:aging.join(", ")});
+// ── QB DETAIL SYNC ────────────────────────────────────────────
+// Column layout (0-indexed):
+// [3]=Type, [5]=Date, [7]=Invoice#, [11]=Customer, [15]=Due Date, [19]=Aging days, [21]=Amount
+// Section headers in col [0]: 'Current','1 - 30','31 - 60','61 - 90','> 90'
+
+function handleQBUpload(event){
+  const file=event.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array",cellDates:true});
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:null,raw:false});
+
+      // Track which aging bucket we're in
+      const HOLD_BUCKETS=["31 - 60","61 - 90","> 90"];
+      const SKIP_NAMES=["A/R Clearing","Account Adjustment","ChargeItPro","Openedge","Brecheen Pipe","Structural Steel of Carolina"];
+      let currentBucket=null;
+      let inHoldBucket=false;
+
+      // customerMap: name -> {invoices:[]}
+      const customerMap={};
+
+      for(let i=0;i<rows.length;i++){
+        const row=rows[i];
+        const col0=row[0]?String(row[0]).trim():"";
+
+        // Detect section headers
+        if(["Current","1 - 30","31 - 60","61 - 90","> 90"].includes(col0)){
+          currentBucket=col0;
+          inHoldBucket=HOLD_BUCKETS.includes(col0);
+          continue;
         }
+        // Skip total rows and non-hold sections
+        if(!inHoldBucket) continue;
+        if(col0.startsWith("Total")) continue;
+
+        const type=row[3]?String(row[3]).trim():"";
+        const name=row[11]?String(row[11]).trim():"";
+        const invoiceNum=row[7]?String(row[7]).trim():"";
+        const dateVal=row[5];
+        const dueDateVal=row[15];
+        const agingVal=row[19];
+        const amountVal=parseFloat(row[21]);
+
+        // Only process Invoice lines with a real customer name
+        if(type!=="Invoice") continue;
+        if(!name||SKIP_NAMES.some(s=>name.includes(s))) continue;
+        if(isNaN(amountVal)||amountVal<=0) continue;
+
+        const aging=agingVal?parseInt(agingVal):0;
+        let agingBucket="31-60";
+        if(aging>90) agingBucket=">90";
+        else if(aging>60) agingBucket="61-90";
+
+        if(!customerMap[name]) customerMap[name]={invoices:[]};
+        customerMap[name].invoices.push({
+          invoiceNum, date:dateVal, dueDate:dueDateVal,
+          amount:amountVal, aging, agingBucket, bucket:currentBucket,
+        });
       }
-      if (overdueFromQB.length===0) {
-        showToast("⚠️ No overdue customers found. Make sure this is an A/R Aging export.", "error");
+
+      if(Object.keys(customerMap).length===0){
+        showToast("⚠️ No overdue invoices found. Make sure this is an A/R Aging Detail export.","error");
         event.target.value=""; return;
       }
-      const activeNames = state.holds.filter(h=>h.status==="active").map(h=>h.name.toLowerCase().trim());
-      const qbNames = overdueFromQB.map(c=>c.name.toLowerCase().trim());
-      state.syncPreview = {
-        toAdd:     overdueFromQB.filter(c=>!activeNames.includes(c.name.toLowerCase().trim())),
-        toResolve: state.holds.filter(h=>h.status==="active" && !qbNames.includes(h.name.toLowerCase().trim())),
-        toKeep:    state.holds.filter(h=>h.status==="active" &&  qbNames.includes(h.name.toLowerCase().trim())),
-      };
+
+      // Build holds from customerMap
+      const newHolds=Object.entries(customerMap).map(([name,data])=>{
+        const total=data.invoices.reduce((s,inv)=>s+inv.amount,0);
+        const worstAging=Math.max(...data.invoices.map(i=>i.aging));
+        return {
+          id:uid(), name, date:today(),
+          reason:`QB sync — ${data.invoices.length} invoice${data.invoices.length!==1?"s":""}, total ${fmtMoney(total)}`,
+          status:"active", autoSynced:true,
+          invoices:data.invoices,
+          totalOwed:total, worstAging,
+        };
+      }).sort((a,b)=>b.totalOwed-a.totalOwed);
+
+      state.syncPreview={newHolds, freshStart:true};
       state.modal="syncPreview";
       renderModal();
       event.target.value="";
-    } catch(err) {
+    }catch(err){
       console.error(err);
-      showToast("⚠️ Could not read file. Make sure it's the QuickBooks A/R Aging Excel export.", "error");
+      showToast("⚠️ Could not read file. Make sure it's the A/R Aging Detail Excel export.","error");
       event.target.value="";
     }
   };
   reader.readAsArrayBuffer(file);
 }
 
-async function applySync() {
-  const {toAdd, toResolve} = state.syncPreview;
-  toAdd.forEach(c => state.holds.push({
-    id:uid(), name:c.name, date:today(),
-    reason:`QB sync — overdue: ${c.aging} ($${c.total.toLocaleString()})`,
-    status:"active", autoSynced:true,
-  }));
-  toResolve.forEach(c => {
-    state.holds = state.holds.map(h => h.id===c.id ? {...h, status:"resolved"} : h);
-  });
+async function applySync(){
+  state.holds=state.syncPreview.newHolds;
+  state.expanded={};
   state.modal=null; state.syncPreview=null;
   render();
-  await persist(`QB sync complete — ${toAdd.length} added, ${toResolve.length} resolved`);
+  await persist(`QB sync complete — ${state.holds.length} customers on hold`);
 }
 
-// ── RENDER ───────────────────────────────────────────────────
-function render() {
+// ── RENDER ────────────────────────────────────────────────────
+function render(){
   renderHeader(); renderStatusBar(); renderQBBanner();
   renderControls(); renderCards(); renderModal(); renderFooter();
 }
 
-function renderHeader() {
-  const active = state.holds.filter(h=>h.status==="active").length;
-  document.getElementById("headerSub").textContent =
-    state.loading ? "Loading..." : `${active} customer${active!==1?"s":""} currently on hold`;
-  document.getElementById("headerActions").innerHTML = state.mode==="admin"
-    ? `<span style="font-size:12px;color:#8888aa;margin-right:8px;">Admin Mode</span>
-       <button class="btn btn-ghost" onclick="signOut()">Sign Out</button>`
-    : `<button class="btn btn-primary" onclick="openModal('login')">Admin Login</button>`;
+function renderHeader(){
+  const active=state.holds.filter(h=>h.status==="active").length;
+  document.getElementById("headerSub").textContent=
+    state.loading?"Loading...":`${active} customer${active!==1?"s":""} currently on hold`;
+  document.getElementById("headerActions").innerHTML=state.mode==="admin"
+    ?`<span style="font-size:12px;color:#8888aa;margin-right:8px;">Admin Mode</span>
+      <button class="btn btn-ghost" onclick="signOut()">Sign Out</button>`
+    :`<button class="btn btn-primary" onclick="openModal('login')">Admin Login</button>`;
 }
 
-function renderStatusBar() {
-  const bar = document.getElementById("statusBar");
-  const active = state.holds.filter(h=>h.status==="active").length;
-  if (!state.loading && active>0) {
+function renderStatusBar(){
+  const bar=document.getElementById("statusBar");
+  const active=state.holds.filter(h=>h.status==="active").length;
+  if(!state.loading&&active>0){
     bar.style.display="block";
     bar.textContent=`⛔ ${active} customer${active!==1?"s are":" is"} currently on programming hold — do not proceed with their work`;
   } else bar.style.display="none";
 }
 
-function renderQBBanner() {
-  // Simply show when admin, hide otherwise
-  document.getElementById("qbBanner").style.display = state.mode==="admin" ? "flex" : "none";
+function renderQBBanner(){
+  document.getElementById("qbBanner").style.display=state.mode==="admin"?"flex":"none";
 }
 
-function renderControls() {
-  const ctrl = document.getElementById("controls");
-  if (state.loading) { ctrl.style.display="none"; return; }
+function renderControls(){
+  const ctrl=document.getElementById("controls");
+  if(state.loading){ctrl.style.display="none";return;}
   ctrl.style.display="flex";
   renderTabs();
-  document.getElementById("addBtnWrap").innerHTML = state.mode==="admin"
-    ? `<button class="btn btn-primary" style="margin-left:auto" onclick="openModal('add')">+ Add Customer</button>` : "";
+  document.getElementById("addBtnWrap").innerHTML=state.mode==="admin"
+    ?`<button class="btn btn-primary" style="margin-left:auto" onclick="openModal('add')">+ Add Customer</button>`:"";
 }
 
-function renderTabs() {
+function renderTabs(){
   const active=state.holds.filter(h=>h.status==="active").length;
   const resolved=state.holds.filter(h=>h.status==="resolved").length;
   document.getElementById("tabs").innerHTML=`
@@ -345,70 +392,119 @@ function renderTabs() {
     <button class="tab ${state.filter==='all'?'active':''}" onclick="setFilter('all')">All</button>`;
 }
 
-function renderCards() {
-  const wrap = document.getElementById("cardListWrap");
-  if (state.loading) { wrap.innerHTML=`<div class="spinner">⏳ Loading from database...</div>`; return; }
-  const q = state.search.toLowerCase();
-  const filtered = state.holds
-    .filter(h=>state.filter==="all" ? true : h.status===state.filter)
+function renderCards(){
+  const wrap=document.getElementById("cardListWrap");
+  if(state.loading){wrap.innerHTML=`<div class="spinner">⏳ Loading from database...</div>`;return;}
+  const q=state.search.toLowerCase();
+  const filtered=state.holds
+    .filter(h=>state.filter==="all"?true:h.status===state.filter)
     .filter(h=>h.name.toLowerCase().includes(q)||(h.reason||"").toLowerCase().includes(q))
-    .sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if (filtered.length===0) {
+    .sort((a,b)=>(b.totalOwed||0)-(a.totalOwed||0));
+  if(filtered.length===0){
     wrap.innerHTML=`<div class="empty">
       <div class="empty-icon">${state.filter==="active"?"✅":"🔍"}</div>
       <div class="empty-title">${state.filter==="active"?"No customers on hold":"No entries found"}</div>
-      <div class="empty-sub">${state.mode==="admin"&&state.filter==="active"?'Click "Add Customer" or use the QB sync above':""}</div>
+      <div class="empty-sub">${state.mode==="admin"&&state.filter==="active"?'Upload a QB export or click "Add Customer"':""}</div>
     </div>`;
   } else {
     wrap.innerHTML=`<div class="hold-list">${filtered.map(cardHTML).join("")}</div>`;
   }
 }
 
-function cardHTML(h) {
-  const isHold = h.status==="active";
-  const badge = isHold
-    ? `<span class="badge badge-hold"><span class="badge-dot"></span>On Hold</span>`
-    : `<span class="badge badge-resolved"><span class="badge-dot"></span>Resolved</span>`;
-  const autoTag = h.autoSynced ? `<span class="badge badge-auto">QB Synced</span>` : "";
-  const adminBtns = state.mode==="admin" ? `
+function cardHTML(h){
+  const isHold=h.status==="active";
+  const isExpanded=!!state.expanded[h.id];
+  const badge=isHold
+    ?`<span class="badge badge-hold"><span class="badge-dot"></span>On Hold</span>`
+    :`<span class="badge badge-resolved"><span class="badge-dot"></span>Resolved</span>`;
+  const autoTag=h.autoSynced?`<span class="badge badge-auto">QB Synced</span>`:"";
+  const totalTag=h.totalOwed?`<span style="font-size:13px;font-weight:700;color:var(--red);margin-left:4px;">${fmtMoney(h.totalOwed)}</span>`:"";
+  const expandHint=h.invoices&&h.invoices.length>0
+    ?`<span style="font-size:12px;color:#aaa;margin-left:6px;">${isExpanded?"▲":"▼"} ${h.invoices.length} invoice${h.invoices.length!==1?"s":""}</span>`:"";
+
+  const adminBtns=state.mode==="admin"?`
     <div class="card-actions">
-      <button class="btn btn-outline btn-sm" onclick="openEdit('${h.id}')">Edit</button>
-      ${isHold?`<button class="btn btn-sm" style="background:#F6FFED;border:1px solid #B7EB8F;color:#27AE60;font-weight:600" onclick="openResolve('${h.id}')">Resolve</button>`:""}
-      <button class="btn btn-danger btn-sm" onclick="openDelete('${h.id}')">Delete</button>
-    </div>` : "";
-  return `<div class="hold-card ${isHold?"on-hold":"resolved"}">
-    <div class="accent-bar"></div>
-    <div class="card-body">
-      <div class="card-top"><span class="customer-name">${esc(h.name)}</span>${badge}${autoTag}</div>
-      <div class="card-meta">
-        <span>📅 On hold since ${fmtDate(h.date)}</span>
-        ${h.reason?`<span>📝 ${esc(h.reason)}</span>`:""}
+      <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openEdit('${h.id}')">Edit</button>
+      ${isHold?`<button class="btn btn-sm" style="background:#F6FFED;border:1px solid #B7EB8F;color:#27AE60;font-weight:600" onclick="event.stopPropagation();openResolve('${h.id}')">Resolve</button>`:""}
+      <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();openDelete('${h.id}')">Delete</button>
+    </div>`:"";
+
+  // Invoice detail panel
+  let invoicePanel="";
+  if(h.invoices&&h.invoices.length>0&&isExpanded){
+    const rows=h.invoices.map(inv=>{
+      const chipClass=inv.agingBucket===">90"?"aging-90":inv.agingBucket==="61-90"?"aging-61":"aging-31";
+      return `<tr>
+        <td>${esc(inv.invoiceNum||"—")}</td>
+        <td>${fmtDate(inv.date)}</td>
+        <td>${fmtDate(inv.dueDate)}</td>
+        <td><span class="aging-chip ${chipClass}">${inv.aging} days</span></td>
+        <td class="amount">${fmtMoney(inv.amount)}</td>
+      </tr>`;
+    }).join("");
+    const total=h.invoices.reduce((s,i)=>s+i.amount,0);
+    invoicePanel=`<div class="invoice-panel open">
+      <table class="invoice-table">
+        <thead><tr>
+          <th>Invoice #</th><th>Date</th><th>Due Date</th><th>Aging</th><th style="text-align:right">Amount</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="invoice-total">Total Overdue: ${fmtMoney(total)}</div>
+    </div>`;
+  } else if(h.invoices&&h.invoices.length>0){
+    invoicePanel=`<div class="invoice-panel"></div>`;
+  }
+
+  return `<div class="hold-card ${isHold?"on-hold":"resolved"} ${isExpanded?"expanded":""}">
+    <div class="card-header" onclick="toggleExpand('${h.id}')">
+      <div class="accent-bar"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <span class="customer-name">${esc(h.name)}</span>
+          ${badge}${autoTag}${totalTag}${expandHint}
+        </div>
+        <div class="card-meta">
+          <span>📅 On hold since ${fmtDate(h.date)}</span>
+          ${h.reason?`<span>📝 ${esc(h.reason)}</span>`:""}
+        </div>
       </div>
-    </div>${adminBtns}</div>`;
+      ${adminBtns}
+    </div>
+    ${invoicePanel}
+  </div>`;
 }
 
-function renderModal() {
-  const wrap = document.getElementById("modalWrap");
-  if (!state.modal) { wrap.innerHTML=""; return; }
+function toggleExpand(id){
+  state.expanded[id]=!state.expanded[id];
+  renderCards();
+}
 
-  if (state.modal==="syncPreview") {
-    const {toAdd,toResolve,toKeep}=state.syncPreview;
+function renderModal(){
+  const wrap=document.getElementById("modalWrap");
+  if(!state.modal){wrap.innerHTML="";return;}
+
+  if(state.modal==="syncPreview"){
+    const {newHolds}=state.syncPreview;
+    const total=newHolds.reduce((s,h)=>s+(h.totalOwed||0),0);
     wrap.innerHTML=`<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal">
       <div class="modal-header"><span class="modal-title">QuickBooks Sync Preview</span><button class="modal-close" onclick="closeModal()">×</button></div>
-      <p style="font-size:13px;color:#666;margin-bottom:8px">Review changes before applying:</p>
+      <div class="warning-box">⚠️ <strong>Fresh Start:</strong> This will replace your entire current hold list with ${newHolds.length} customers imported from QuickBooks. All existing entries will be removed.</div>
+      <p style="font-size:13px;color:#666;margin-bottom:10px;">Customers to be added (<strong>${newHolds.length}</strong>, total overdue: <strong>${fmtMoney(total)}</strong>):</p>
       <div class="sync-preview">
-        ${toAdd.length?`<div class="sync-section-title">➕ Will be added (${toAdd.length})</div>${toAdd.map(c=>`<div class="sync-item sync-add"><span class="sync-dot"></span><span><strong>${esc(c.name)}</strong> — ${esc(c.aging)}</span></div>`).join("")}`:""}
-        ${toResolve.length?`<div class="sync-section-title">✅ Will be resolved — no longer overdue (${toResolve.length})</div>${toResolve.map(c=>`<div class="sync-item sync-resolve"><span class="sync-dot"></span><span>${esc(c.name)}</span></div>`).join("")}`:""}
-        ${toKeep.length?`<div class="sync-section-title">— No change, still overdue (${toKeep.length})</div>${toKeep.map(c=>`<div class="sync-item sync-keep"><span class="sync-dot"></span><span>${esc(c.name)}</span></div>`).join("")}`:""}
+        ${newHolds.map(h=>`<div class="sync-item sync-add">
+          <span class="sync-dot"></span>
+          <span><strong>${esc(h.name)}</strong> — ${h.invoices.length} invoice${h.invoices.length!==1?"s":""} — ${fmtMoney(h.totalOwed)}</span>
+        </div>`).join("")}
       </div>
       <div class="modal-actions">
         <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
-        <button class="btn btn-blue" onclick="applySync()">Apply Sync</button>
+        <button class="btn btn-blue" onclick="applySync()">Replace & Import</button>
       </div>
     </div></div>`; return;
   }
 
-  if (state.modal==="login") {
+  if(state.modal==="login"){
     wrap.innerHTML=`<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal">
       <div class="modal-header"><span class="modal-title">Admin Login</span><button class="modal-close" onclick="closeModal()">×</button></div>
       <div class="field"><label>Password</label>
@@ -421,7 +517,7 @@ function renderModal() {
     </div></div>`; return;
   }
 
-  if (state.modal==="add"||state.modal==="edit") {
+  if(state.modal==="add"||state.modal==="edit"){
     const h=state.modal==="edit"?state.holds.find(x=>x.id===state.editTarget):null;
     wrap.innerHTML=`<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal">
       <div class="modal-header"><span class="modal-title">${state.modal==="add"?"Add Customer to Hold":"Edit Hold"}</span><button class="modal-close" onclick="closeModal()">×</button></div>
@@ -440,7 +536,7 @@ function renderModal() {
     </div></div>`; return;
   }
 
-  if (state.modal==="resolve") {
+  if(state.modal==="resolve"){
     const h=state.holds.find(x=>x.id===state.resolveTarget);
     wrap.innerHTML=`<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal">
       <div class="modal-header"><span class="modal-title">Mark as Resolved?</span><button class="modal-close" onclick="closeModal()">×</button></div>
@@ -452,7 +548,7 @@ function renderModal() {
     </div></div>`; return;
   }
 
-  if (state.modal==="delete") {
+  if(state.modal==="delete"){
     const h=state.holds.find(x=>x.id===state.deleteTarget);
     wrap.innerHTML=`<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal">
       <div class="modal-header"><span class="modal-title">Delete Entry?</span><button class="modal-close" onclick="closeModal()">×</button></div>
@@ -465,12 +561,12 @@ function renderModal() {
   }
 }
 
-function renderFooter() {
+function renderFooter(){
   const el=document.getElementById("footerNote");
-  if (state.loading) { el.style.display="none"; return; }
+  if(state.loading){el.style.display="none";return;}
   el.style.display="block";
   el.textContent=state.mode==="viewer"
-    ?"Read-only view — contact admin to make changes"
+    ?"Read-only view — click a customer name to see invoice details"
     :"Admin mode — changes sync to Google Sheets automatically";
 }
 
@@ -487,14 +583,10 @@ function signOut(){state.mode="viewer";render();showToast("Signed out of admin m
 
 function doLogin(){
   const pw=document.getElementById("pwInput")?.value||"";
-  if (pw===ADMIN_PASSWORD){
-    state.mode="admin";
-    state.modal=null;
-    render(); // render() calls renderQBBanner() which shows the banner
-    showToast("Welcome, Admin!");
+  if(pw===ADMIN_PASSWORD){
+    state.mode="admin"; state.modal=null; render(); showToast("Welcome, Admin!");
   } else {
-    const e=document.getElementById("pwError");
-    if(e) e.textContent="Incorrect password.";
+    const e=document.getElementById("pwError"); if(e) e.textContent="Incorrect password.";
   }
 }
 
