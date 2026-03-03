@@ -79,9 +79,7 @@ main{max-width:920px;margin:0 auto;padding:28px 24px;}
 .aging-90{background:var(--red-light);color:var(--red);}
 .invoice-total{display:flex;justify-content:flex-end;padding:10px 10px 0;font-weight:700;font-size:14px;color:var(--dark);}
 .sync-preview{max-height:360px;overflow-y:auto;margin-bottom:18px;}
-.sync-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mid);margin:14px 0 8px;}
-.sync-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:4px;font-size:13px;}
-.sync-add{background:var(--green-light);}
+.sync-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:4px;font-size:13px;background:var(--green-light);}
 .sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--green);}
 .warning-box{background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px 16px;font-size:13px;color:#856404;margin-bottom:16px;line-height:1.5;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:500;backdrop-filter:blur(3px);}
@@ -144,13 +142,14 @@ const ADMIN_PASSWORD="kss2000";
 const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbwCs4MK1jtf0lKb2tW6kJKncR4oizFnKo1w3WDflr_J5cwjwzlGtbjW8rrogr3xB7q6JA/exec";
 let state={holds:[],mode:"viewer",filter:"active",search:"",modal:null,editTarget:null,resolveTarget:null,deleteTarget:null,loading:true,syncPreview:null,expanded:{}};
 
+// Convert Excel serial date number to display string
+function excelDateToStr(serial){
+  const d=new Date(Math.round((serial-25569)*86400*1000));
+  return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+}
 function fmtDate(val){
   if(!val) return "";
-  if(typeof val==="number"){
-    // Excel serial date
-    const d=new Date(Math.round((val-25569)*86400*1000));
-    return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-  }
+  if(typeof val==="number") return excelDateToStr(val);
   if(typeof val==="string"){
     if(/^\d{4}-\d{2}-\d{2}$/.test(val)){const[y,m,d]=val.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});}
     if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val)){const[m,d,y]=val.split("/").map(Number);return new Date(y,m-1,d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});}
@@ -175,14 +174,16 @@ async function fetchHolds(){const res=await fetch(APPS_SCRIPT_URL);if(!res.ok)th
 async function saveHolds(holds){const res=await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify({action:"save",holds})});if(!res.ok)throw new Error("Failed");}
 
 // QB A/R Aging DETAIL parser
-// Column indices (0-based): 0=section header, 3=Type, 5=Date, 7=Invoice#, 11=Customer, 15=Due Date, 19=Aging, 21=Amount
+// Columns (0-based): 0=section header, 3=Type, 5=Date, 7=Invoice#, 11=Customer, 15=Due Date, 19=Aging days, 21=Amount
+// KEY FIX: Use the section header ("31 - 60", "61 - 90", "> 90") as the authoritative aging bucket,
+// not the raw aging number — QB sometimes stores stale/incorrect day counts for very old invoices.
+// For display we calculate days from invoice date to today if the raw aging looks wrong (<= 1).
 function handleQBUpload(event){
   const file=event.target.files[0];
   if(!file) return;
   const reader=new FileReader();
   reader.onload=function(e){
     try{
-      // Use raw:true to get actual cell values without date conversion issues
       const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array"});
       const ws=wb.Sheets[wb.SheetNames[0]];
       const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null,raw:true});
@@ -194,22 +195,18 @@ function handleQBUpload(event){
       let currentSection=null;
       let inHoldSection=false;
       const customerMap={};
+      const todayMs=Date.now();
 
       for(let i=0;i<rows.length;i++){
         const row=rows[i];
         if(!row) continue;
-
-        // col0 holds section headers like "31 - 60"
         const col0=row[0]!=null?String(row[0]).trim():"";
 
-        // Check if this row is a section header
         if(ALL_SECTIONS.includes(col0)){
           currentSection=col0;
           inHoldSection=HOLD_SECTIONS.includes(col0);
           continue;
         }
-
-        // Skip totals, non-hold sections
         if(!inHoldSection) continue;
         if(col0.startsWith("Total")) continue;
 
@@ -220,21 +217,30 @@ function handleQBUpload(event){
         if(!name||SKIP_NAMES.some(s=>name.toLowerCase().includes(s.toLowerCase()))) continue;
 
         const invoiceNum=row[7]!=null?String(row[7]).trim():"";
-        const dateVal=row[5];    // Excel serial number or string
+        const dateVal=row[5];
         const dueDateVal=row[15];
-        const agingRaw=row[19];
         const amountRaw=row[21];
-
         const amount=parseFloat(amountRaw);
         if(isNaN(amount)||amount<=0) continue;
 
-        const aging=agingRaw!=null?parseInt(String(agingRaw)):0;
-        let agingBucket="31-60";
-        if(aging>90) agingBucket=">90";
-        else if(aging>60) agingBucket="61-90";
+        // Determine aging bucket from section (authoritative)
+        let agingBucket=currentSection==="61 - 90"?"61-90":currentSection==="> 90"?">90":"31-60";
+
+        // Calculate actual days from invoice date for display
+        // dateVal is an Excel serial number (days since 1900-01-01)
+        let agingDays=null;
+        if(typeof dateVal==="number"){
+          const invoiceMs=Math.round((dateVal-25569)*86400*1000);
+          agingDays=Math.floor((todayMs-invoiceMs)/86400000);
+        }
+        // Fallback: use raw aging value only if it looks reasonable (> 1)
+        if(agingDays===null||agingDays<1){
+          const rawAging=row[19]!=null?parseInt(String(row[19])):0;
+          agingDays=rawAging>1?rawAging:(currentSection==="> 90"?90:currentSection==="61 - 90"?61:31);
+        }
 
         if(!customerMap[name]) customerMap[name]={invoices:[]};
-        customerMap[name].invoices.push({invoiceNum,date:dateVal,dueDate:dueDateVal,amount,aging,agingBucket});
+        customerMap[name].invoices.push({invoiceNum,date:dateVal,dueDate:dueDateVal,amount,aging:agingDays,agingBucket});
       }
 
       const customers=Object.keys(customerMap);
@@ -243,13 +249,13 @@ function handleQBUpload(event){
         event.target.value="";return;
       }
 
-      const newHolds=customers.map(name=>{
+      const newHolds=customers.map(function(name){
         const data=customerMap[name];
-        const total=data.invoices.reduce((s,inv)=>s+inv.amount,0);
-        return{id:uid(),name,date:today(),reason:"QB sync — "+data.invoices.length+" invoice"+(data.invoices.length!==1?"s":"")+", total "+fmtMoney(total),status:"active",autoSynced:true,invoices:data.invoices,totalOwed:total};
-      }).sort((a,b)=>b.totalOwed-a.totalOwed);
+        const total=data.invoices.reduce(function(s,inv){return s+inv.amount;},0);
+        return{id:uid(),name:name,date:today(),reason:"QB sync — "+data.invoices.length+" invoice"+(data.invoices.length!==1?"s":"")+", total "+fmtMoney(total),status:"active",autoSynced:true,invoices:data.invoices,totalOwed:total};
+      }).sort(function(a,b){return b.totalOwed-a.totalOwed;});
 
-      state.syncPreview={newHolds};
+      state.syncPreview={newHolds:newHolds};
       state.modal="syncPreview";
       renderModal();
       event.target.value="";
@@ -273,7 +279,7 @@ async function applySync(){
 function render(){renderHeader();renderStatusBar();renderQBBanner();renderControls();renderCards();renderModal();renderFooter();}
 
 function renderHeader(){
-  const active=state.holds.filter(h=>h.status==="active").length;
+  const active=state.holds.filter(function(h){return h.status==="active";}).length;
   document.getElementById("headerSub").textContent=state.loading?"Loading...":active+" customer"+(active!==1?"s":"")+" currently on hold";
   document.getElementById("headerActions").innerHTML=state.mode==="admin"
     ?'<span style="font-size:12px;color:#8888aa;margin-right:8px;">Admin Mode</span><button class="btn btn-ghost" onclick="signOut()">Sign Out</button>'
@@ -281,7 +287,7 @@ function renderHeader(){
 }
 function renderStatusBar(){
   const bar=document.getElementById("statusBar");
-  const active=state.holds.filter(h=>h.status==="active").length;
+  const active=state.holds.filter(function(h){return h.status==="active";}).length;
   if(!state.loading&&active>0){bar.style.display="block";bar.textContent="⛔ "+active+" customer"+(active!==1?"s are":" is")+" currently on programming hold — do not proceed with their work";}
   else bar.style.display="none";
 }
@@ -293,19 +299,20 @@ function renderControls(){
   document.getElementById("addBtnWrap").innerHTML=state.mode==="admin"?'<button class="btn btn-primary" style="margin-left:auto" onclick="openModal(\'add\')">+ Add Customer</button>':"";
 }
 function renderTabs(){
-  const a=state.holds.filter(h=>h.status==="active").length;
-  const r=state.holds.filter(h=>h.status==="resolved").length;
+  const a=state.holds.filter(function(h){return h.status==="active";}).length;
+  const r=state.holds.filter(function(h){return h.status==="resolved";}).length;
   document.getElementById("tabs").innerHTML='<button class="tab '+(state.filter==="active"?"active":"")+'" onclick="setFilter(\'active\')">On Hold ('+a+')</button><button class="tab '+(state.filter==="resolved"?"active":"")+'" onclick="setFilter(\'resolved\')">Resolved ('+r+')</button><button class="tab '+(state.filter==="all"?"active":"")+'" onclick="setFilter(\'all\')">All</button>';
 }
 function renderCards(){
   const wrap=document.getElementById("cardListWrap");
   if(state.loading){wrap.innerHTML='<div class="spinner">⏳ Loading from database...</div>';return;}
   const q=state.search.toLowerCase();
-  const filtered=state.holds.filter(h=>state.filter==="all"?true:h.status===state.filter).filter(h=>h.name.toLowerCase().includes(q)||(h.reason||"").toLowerCase().includes(q)).sort((a,b)=>(b.totalOwed||0)-(a.totalOwed||0));
+  const filtered=state.holds.filter(function(h){return state.filter==="all"?true:h.status===state.filter;}).filter(function(h){return h.name.toLowerCase().includes(q)||(h.reason||"").toLowerCase().includes(q);}).sort(function(a,b){return(b.totalOwed||0)-(a.totalOwed||0);});
   if(filtered.length===0){
     wrap.innerHTML='<div class="empty"><div class="empty-icon">'+(state.filter==="active"?"✅":"🔍")+'</div><div class="empty-title">'+(state.filter==="active"?"No customers on hold":"No entries found")+'</div><div class="empty-sub">'+(state.mode==="admin"&&state.filter==="active"?'Upload a QB export or click "Add Customer"':"")+'</div></div>';
   }else{
     wrap.innerHTML='<div class="hold-list">'+filtered.map(cardHTML).join("")+"</div>";
+    attachCardListeners();
   }
 }
 
@@ -316,32 +323,56 @@ function cardHTML(h){
   const autoTag=h.autoSynced?'<span class="badge badge-auto">QB Synced</span>':"";
   const totalTag=h.totalOwed?'<span style="font-size:13px;font-weight:700;color:var(--red);margin-left:4px;">'+fmtMoney(h.totalOwed)+'</span>':"";
   const expandHint=h.invoices&&h.invoices.length?'<span style="font-size:12px;color:#aaa;margin-left:6px;">'+(isExp?"▲":"▼")+" "+h.invoices.length+" invoice"+(h.invoices.length!==1?"s":"")+"</span>":"";
-  const adminBtns=state.mode==="admin"?'<div class="card-actions"><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openEdit(\''+h.id+'\')">Edit</button>'+(isHold?'<button class="btn btn-sm" style="background:#F6FFED;border:1px solid #B7EB8F;color:#27AE60;font-weight:600" onclick="event.stopPropagation();openResolve(\''+h.id+'\')">Resolve</button>':'')+'<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();openDelete(\''+h.id+'\')">Delete</button></div>':"";
+  const adminBtns=state.mode==="admin"?'<div class="card-actions"><button class="btn btn-outline btn-sm" data-action="edit" data-id="'+h.id+'">Edit</button>'+(isHold?'<button class="btn btn-sm" style="background:#F6FFED;border:1px solid #B7EB8F;color:#27AE60;font-weight:600" data-action="resolve" data-id="'+h.id+'">Resolve</button>':'')+'<button class="btn btn-danger btn-sm" data-action="delete" data-id="'+h.id+'">Delete</button></div>':"";
 
   let invoicePanel="";
   if(h.invoices&&h.invoices.length&&isExp){
-    const irows=h.invoices.map(inv=>{
+    const irows=h.invoices.map(function(inv){
       const chipClass=inv.agingBucket===">90"?"aging-90":inv.agingBucket==="61-90"?"aging-61":"aging-31";
       return '<tr><td>'+esc(inv.invoiceNum||"—")+'</td><td>'+fmtDate(inv.date)+'</td><td>'+fmtDate(inv.dueDate)+'</td><td><span class="aging-chip '+chipClass+'">'+inv.aging+' days</span></td><td class="amount">'+fmtMoney(inv.amount)+'</td></tr>';
     }).join("");
-    const tot=h.invoices.reduce((s,i)=>s+i.amount,0);
+    const tot=h.invoices.reduce(function(s,i){return s+i.amount;},0);
     invoicePanel='<div class="invoice-panel open"><table class="invoice-table"><thead><tr><th>Invoice #</th><th>Date</th><th>Due Date</th><th>Aging</th><th style="text-align:right">Amount</th></tr></thead><tbody>'+irows+'</tbody></table><div class="invoice-total">Total Overdue: '+fmtMoney(tot)+'</div></div>';
   }else if(h.invoices&&h.invoices.length){
     invoicePanel='<div class="invoice-panel"></div>';
   }
 
-  return '<div class="hold-card '+(isHold?"on-hold":"resolved")+'"><div class="card-header" onclick="toggleExpand(\''+h.id+'\')"><div class="accent-bar"></div><div class="card-body"><div class="card-top"><span class="customer-name">'+esc(h.name)+'</span>'+badge+autoTag+totalTag+expandHint+'</div><div class="card-meta"><span>📅 On hold since '+fmtDate(h.date)+'</span>'+(h.reason?'<span>📝 '+esc(h.reason)+'</span>':"")+'</div></div>'+adminBtns+'</div>'+invoicePanel+'</div>';
+  return '<div class="hold-card '+(isHold?"on-hold":"resolved")+'" data-id="'+h.id+'"><div class="card-header"><div class="accent-bar"></div><div class="card-body"><div class="card-top"><span class="customer-name">'+esc(h.name)+'</span>'+badge+autoTag+totalTag+expandHint+'</div><div class="card-meta"><span>&#x1F4C5; On hold since '+fmtDate(h.date)+'</span>'+(h.reason?'<span>&#x1F4DD; '+esc(h.reason)+'</span>':"")+'</div></div>'+adminBtns+'</div>'+invoicePanel+'</div>';
 }
 
 function toggleExpand(id){state.expanded[id]=!state.expanded[id];renderCards();}
+
+function attachCardListeners(){
+  const wrap=document.getElementById("cardListWrap");
+  if(!wrap) return;
+  wrap.addEventListener("click",function(e){
+    // Handle admin action buttons
+    const btn=e.target.closest("[data-action]");
+    if(btn){
+      e.stopPropagation();
+      const id=btn.getAttribute("data-id");
+      const action=btn.getAttribute("data-action");
+      if(action==="edit") openEdit(id);
+      else if(action==="resolve") openResolve(id);
+      else if(action==="delete") openDelete(id);
+      return;
+    }
+    // Handle card expand — click anywhere on card-header
+    const header=e.target.closest(".card-header");
+    if(header){
+      const card=header.closest("[data-id]");
+      if(card) toggleExpand(card.getAttribute("data-id"));
+    }
+  });
+}
 
 function renderModal(){
   const wrap=document.getElementById("modalWrap");
   if(!state.modal){wrap.innerHTML="";return;}
   if(state.modal==="syncPreview"){
-    const{newHolds}=state.syncPreview;
-    const total=newHolds.reduce((s,h)=>s+(h.totalOwed||0),0);
-    wrap.innerHTML='<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal"><div class="modal-header"><span class="modal-title">QuickBooks Sync Preview</span><button class="modal-close" onclick="closeModal()">×</button></div><div class="warning-box">⚠️ <strong>Fresh Start:</strong> This will replace your entire current hold list with '+newHolds.length+' customers from QuickBooks. All existing entries will be removed.</div><p style="font-size:13px;color:#666;margin-bottom:10px;">Importing <strong>'+newHolds.length+'</strong> customers — total overdue: <strong>'+fmtMoney(total)+'</strong></p><div class="sync-preview">'+newHolds.map(h=>'<div class="sync-item sync-add"><span class="sync-dot"></span><span><strong>'+esc(h.name)+'</strong> — '+h.invoices.length+' invoice'+(h.invoices.length!==1?"s":"")+" — "+fmtMoney(h.totalOwed)+'</span></div>').join("")+'</div><div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-blue" onclick="applySync()">Replace &amp; Import</button></div></div></div>';
+    const nh=state.syncPreview.newHolds;
+    const total=nh.reduce(function(s,h){return s+(h.totalOwed||0);},0);
+    wrap.innerHTML='<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal"><div class="modal-header"><span class="modal-title">QuickBooks Sync Preview</span><button class="modal-close" onclick="closeModal()">×</button></div><div class="warning-box">⚠️ <strong>Fresh Start:</strong> This will replace your entire current hold list with '+nh.length+' customers from QuickBooks.</div><p style="font-size:13px;color:#666;margin-bottom:10px;">Importing <strong>'+nh.length+'</strong> customers — total overdue: <strong>'+fmtMoney(total)+'</strong></p><div class="sync-preview">'+nh.map(function(h){return'<div class="sync-item"><span class="sync-dot"></span><span><strong>'+esc(h.name)+'</strong> — '+h.invoices.length+' invoice'+(h.invoices.length!==1?"s":"")+" — "+fmtMoney(h.totalOwed)+'</span></div>';}).join("")+'</div><div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-blue" onclick="applySync()">Replace &amp; Import</button></div></div></div>';
     return;
   }
   if(state.modal==="login"){
@@ -349,17 +380,17 @@ function renderModal(){
     return;
   }
   if(state.modal==="add"||state.modal==="edit"){
-    const h=state.modal==="edit"?state.holds.find(x=>x.id===state.editTarget):null;
+    const h=state.modal==="edit"?state.holds.find(function(x){return x.id===state.editTarget;}):null;
     wrap.innerHTML='<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal"><div class="modal-header"><span class="modal-title">'+(state.modal==="add"?"Add Customer to Hold":"Edit Hold")+'</span><button class="modal-close" onclick="closeModal()">×</button></div><div class="field"><label>Customer Name *</label><input type="text" id="fName" value="'+(h?esc(h.name):"")+'" placeholder="e.g. Acme Corp" autofocus/><div class="field-error" id="fNameErr"></div></div><div class="field"><label>Date Put on Hold *</label><input type="date" id="fDate" value="'+(h?h.date:today())+'"/><div class="field-error" id="fDateErr"></div></div><div class="field"><label>Reason / Note</label><textarea id="fReason" rows="3" placeholder="e.g. Invoice #1042 overdue 45 days">'+(h?esc(h.reason||""):"")+'</textarea></div><div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="doSave()">'+(state.modal==="add"?"Add to Hold List":"Save Changes")+'</button></div></div></div>';
     return;
   }
   if(state.modal==="resolve"){
-    const h=state.holds.find(x=>x.id===state.resolveTarget);
+    const h=state.holds.find(function(x){return x.id===state.resolveTarget;});
     wrap.innerHTML='<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal"><div class="modal-header"><span class="modal-title">Mark as Resolved?</span><button class="modal-close" onclick="closeModal()">×</button></div><p style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.6"><strong>'+esc(h?h.name:"")+'</strong> will be removed from the active hold list.</p><div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-green" onclick="doResolve()">Yes, Mark Resolved</button></div></div></div>';
     return;
   }
   if(state.modal==="delete"){
-    const h=state.holds.find(x=>x.id===state.deleteTarget);
+    const h=state.holds.find(function(x){return x.id===state.deleteTarget;});
     wrap.innerHTML='<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal"><div class="modal-header"><span class="modal-title">Delete Entry?</span><button class="modal-close" onclick="closeModal()">×</button></div><p style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.6">Permanently delete <strong>'+esc(h?h.name:"")+'</strong>? This cannot be undone.</p><div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="doDelete()">Delete</button></div></div></div>';
   }
 }
@@ -394,20 +425,20 @@ async function doSave(){
   if(!date){if(de)de.textContent="Date is required.";ok=false;}else{if(de)de.textContent="";}
   if(!ok)return;
   const isAdd=state.modal==="add";
-  if(isAdd)state.holds.push({id:uid(),name,date,reason,status:"active"});
-  else state.holds=state.holds.map(h=>h.id===state.editTarget?Object.assign({},h,{name,date,reason}):h);
+  if(isAdd)state.holds.push({id:uid(),name:name,date:date,reason:reason,status:"active"});
+  else state.holds=state.holds.map(function(h){return h.id===state.editTarget?Object.assign({},h,{name:name,date:date,reason:reason}):h;});
   state.modal=null;state.editTarget=null;render();
   await persist(isAdd?name+" added to hold list":"Entry updated");
 }
 async function doResolve(){
-  const h=state.holds.find(x=>x.id===state.resolveTarget);
-  state.holds=state.holds.map(x=>x.id===state.resolveTarget?Object.assign({},x,{status:"resolved"}):x);
+  const h=state.holds.find(function(x){return x.id===state.resolveTarget;});
+  state.holds=state.holds.map(function(x){return x.id===state.resolveTarget?Object.assign({},x,{status:"resolved"}):x;});
   state.modal=null;render();
   await persist((h?h.name:"Customer")+" marked as resolved");
 }
 async function doDelete(){
-  const h=state.holds.find(x=>x.id===state.deleteTarget);
-  state.holds=state.holds.filter(x=>x.id!==state.deleteTarget);
+  const h=state.holds.find(function(x){return x.id===state.deleteTarget;});
+  state.holds=state.holds.filter(function(x){return x.id!==state.deleteTarget;});
   state.modal=null;render();
   await persist((h?h.name:"Entry")+" deleted");
 }
