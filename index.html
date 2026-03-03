@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Programming Hold Board</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --red:#C0392B; --red-light:#FFF1F0; --red-border:#FFCCC7;
+  --green:#27AE60; --green-light:#F6FFED; --green-border:#B7EB8F;
+  --blue:#1a73e8; --blue-light:#e8f0fe; --blue-border:#aecbfa;
+  --dark:#1C1C2E; --mid:#4a4a6a; --bg:#F4F2ED; --card:#fff; --border:#E5E2DA;
+  --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:var(--sans);color:var(--dark);min-height:100vh;}
+
+/* HEADER */
+header{background:var(--dark);padding:0 32px;height:66px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 16px rgba(0,0,0,0.25);position:sticky;top:0;z-index:100;}
+.header-left{display:flex;align-items:center;gap:14px;}
+.logo{width:38px;height:38px;border-radius:9px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.header-title{font-family:var(--serif);font-size:19px;color:#fff;letter-spacing:0.3px;}
+.header-sub{font-size:11px;color:#8888aa;letter-spacing:1px;text-transform:uppercase;margin-top:1px;}
+
+/* BUTTONS */
+.btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;cursor:pointer;border:none;transition:opacity .15s,transform .1s;}
+.btn:hover{opacity:.88;transform:translateY(-1px);}
+.btn-primary{background:var(--red);color:#fff;}
+.btn-blue{background:var(--blue);color:#fff;}
+.btn-ghost{background:rgba(255,255,255,.1);color:#ddd;border:1px solid rgba(255,255,255,.15);}
+.btn-outline{background:#fff;color:var(--dark);border:1.5px solid var(--border);}
+.btn-green{background:var(--green);color:#fff;}
+.btn-danger{background:var(--red-light);color:var(--red);border:1px solid var(--red-border);}
+.btn-sm{padding:6px 12px;font-size:12px;}
+
+/* LAYOUT */
+main{max-width:900px;margin:0 auto;padding:28px 24px;}
+
+/* QB BANNER */
+.qb-banner{background:var(--blue-light);border:1.5px solid var(--blue-border);border-radius:12px;padding:16px 20px;margin-bottom:22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.qb-icon{font-size:26px;flex-shrink:0;}
+.qb-text{flex:1;min-width:180px;}
+.qb-title{font-weight:700;font-size:14px;color:var(--blue);margin-bottom:2px;}
+.qb-sub{font-size:12px;color:#555;line-height:1.4;}
+.qb-label{display:inline-flex;align-items:center;gap:7px;background:var(--blue);color:#fff;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;white-space:nowrap;font-family:var(--sans);}
+.qb-label:hover{opacity:.88;}
+#qbFileInput{display:none;}
+
+/* CONTROLS */
+.controls{display:flex;gap:12px;align-items:center;margin-bottom:22px;flex-wrap:wrap;}
+.search-wrap{position:relative;flex:1 1 220px;max-width:300px;}
+.search-wrap input{width:100%;padding:9px 14px 9px 36px;border:1.5px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:13.5px;background:#fff;outline:none;transition:border-color .2s;caret-color:var(--dark);}
+.search-wrap input:focus{border-color:var(--dark);}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;color:#aaa;pointer-events:none;}
+.tabs{display:flex;gap:5px;}
+.tab{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--mid);font-family:var(--sans);transition:all .15s;}
+.tab.active{background:var(--dark);color:#fff;border-color:var(--dark);font-weight:700;}
+
+/* EMPTY */
+.empty{text-align:center;padding:70px 20px;background:#fff;border-radius:14px;border:2px dashed var(--border);}
+.empty-icon{font-size:44px;margin-bottom:14px;}
+.empty-title{font-family:var(--serif);font-size:20px;color:#888;}
+.empty-sub{font-size:13px;color:#bbb;margin-top:6px;}
+
+/* CARDS */
+.hold-list{display:flex;flex-direction:column;gap:10px;}
+.hold-card{background:var(--card);border-radius:13px;border:1.5px solid var(--border);padding:18px 20px;display:flex;align-items:flex-start;gap:16px;box-shadow:0 2px 10px rgba(0,0,0,.04);transition:box-shadow .2s;}
+.hold-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.09);}
+.hold-card.on-hold{border-color:var(--red-border);}
+.hold-card.resolved{border-color:var(--green-border);opacity:.85;}
+.accent-bar{width:4px;border-radius:4px;align-self:stretch;flex-shrink:0;}
+.on-hold .accent-bar{background:var(--red);}
+.resolved .accent-bar{background:var(--green);}
+.card-body{flex:1;min-width:0;}
+.card-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:5px;}
+.customer-name{font-family:var(--serif);font-size:18px;color:var(--dark);}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:3px 11px;font-size:11.5px;font-weight:600;letter-spacing:.4px;}
+.badge-hold{background:var(--red-light);border:1px solid var(--red-border);color:var(--red);}
+.badge-resolved{background:var(--green-light);border:1px solid var(--green-border);color:var(--green);}
+.badge-auto{background:var(--blue-light);border:1px solid var(--blue-border);color:var(--blue);font-size:10px;}
+.badge-dot{width:6px;height:6px;border-radius:50%;}
+.badge-hold .badge-dot{background:var(--red);}
+.badge-resolved .badge-dot{background:var(--green);}
+.card-meta{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:#777;}
+.card-actions{display:flex;gap:7px;align-items:center;flex-shrink:0;flex-wrap:wrap;}
+
+/* SYNC PREVIEW */
+.sync-preview{max-height:320px;overflow-y:auto;margin-bottom:18px;}
+.sync-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mid);margin:14px 0 8px;}
+.sync-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:4px;font-size:13.5px;}
+.sync-add{background:var(--green-light);}
+.sync-resolve{background:#fff9e6;}
+.sync-keep{background:#f5f5f5;color:#888;}
+.sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sync-add .sync-dot{background:var(--green);}
+.sync-resolve .sync-dot{background:#f0a500;}
+.sync-keep .sync-dot{background:#bbb;}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:500;backdrop-filter:blur(3px);}
+.modal{background:#fff;border-radius:16px;padding:34px 38px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.22);}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.modal-title{font-family:var(--serif);font-size:21px;color:var(--dark);}
+.modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:#aaa;line-height:1;padding:0 4px;}
+.field{margin-bottom:18px;}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--mid);margin-bottom:7px;}
+.field input,.field textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:14px;outline:none;background:#fafafa;transition:border-color .2s;}
+.field input:focus,.field textarea:focus{border-color:var(--dark);background:#fff;}
+.field textarea{resize:vertical;}
+.field-error{color:var(--red);font-size:12px;margin-top:5px;}
+.modal-actions{display:flex;gap:10px;margin-top:6px;}
+.modal-actions .btn{flex:1;padding:12px;font-size:14px;}
+
+/* TOASTS & BARS */
+.toast{position:fixed;bottom:28px;right:28px;color:#fff;padding:13px 22px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:999;max-width:340px;}
+.toast-success{background:var(--dark);}
+.toast-error{background:var(--red);}
+.status-bar{background:var(--red);color:#fff;text-align:center;padding:10px;font-size:13px;font-weight:600;letter-spacing:.3px;}
+.sync-bar{background:#fffbe6;border-bottom:1px solid #ffe58f;color:#7c5a00;text-align:center;padding:8px;font-size:12px;}
+.spinner{text-align:center;padding:60px;color:#aaa;font-size:15px;}
+.footer-note{text-align:center;margin-top:32px;font-size:12px;color:#bbb;}
+
+@media(max-width:600px){
+  header{padding:0 16px;}
+  main{padding:20px 14px;}
+  .modal{padding:24px 20px;margin:16px;}
+  .hold-card{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<div class="sync-bar" id="syncBar" style="display:none">⏳ Saving changes...</div>
+<div class="status-bar" id="statusBar" style="display:none"></div>
+
+<header>
+  <div class="header-left">
+    <div class="logo">⛔</div>
+    <div>
+      <div class="header-title">Programming Hold Board</div>
+      <div class="header-sub" id="headerSub">Loading...</div>
+    </div>
+  </div>
+  <div id="headerActions"></div>
+</header>
+
+<main>
+  <!-- QB banner: hidden by default, shown via JS when admin logs in -->
+  <div class="qb-banner" id="qbBanner" style="display:none">
+    <div class="qb-icon">📊</div>
+    <div class="qb-text">
+      <div class="qb-title">Sync from QuickBooks</div>
+      <div class="qb-sub">Export your A/R Aging report from QuickBooks as Excel (.xlsx), then upload it here to automatically update the hold list.</div>
+    </div>
+    <label class="qb-label">
+      📂 Upload QB Export
+      <input type="file" id="qbFileInput" accept=".xlsx,.xls,.csv" onchange="handleQBUpload(event)"/>
+    </label>
+  </div>
+
+  <div class="controls" id="controls" style="display:none">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search customers or notes..." oninput="onSearch(this.value)"/>
+    </div>
+    <div class="tabs" id="tabs"></div>
+    <div id="addBtnWrap"></div>
+  </div>
+
+  <div id="cardListWrap"><div class="spinner">⏳ Loading from database...</div></div>
+  <div class="footer-note" id="footerNote" style="display:none"></div>
+</main>
+
+<div id="modalWrap"></div>
+<div class="toast" id="toast" style="display:none"></div>
+
+<script>
+// ── CONFIG ───────────────────────────────────────────────────
+const ADMIN_PASSWORD = "kss2000";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCs4MK1jtf0lKb2tW6kJKncR4oizFnKo1w3WDflr_J5cwjwzlGtbjW8rrogr3xB7q6JA/exec";
+
+// ── STATE ────────────────────────────────────────────────────
+let state = {
+  holds:[], mode:"viewer", filter:"active", search:"",
+  modal:null, editTarget:null, resolveTarget:null, deleteTarget:null,
+  loading:true, syncPreview:null,
+};
+
+// ── HELPERS ──────────────────────────────────────────────────
+function fmtDate(val) {
+  if (!val) return "Unknown date";
+  // Handle YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+    const [y,m,d] = val.split("-").map(Number);
+    return new Date(y, m-1, d).toLocaleDateString("en-US", {month:"short",day:"numeric",year:"numeric"});
+  }
+  // Handle M/D/YYYY or MM/DD/YYYY
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val)) {
+    const [m,d,y] = val.split("/").map(Number);
+    return new Date(y, m-1, d).toLocaleDateString("en-US", {month:"short",day:"numeric",year:"numeric"});
+  }
+  // Try generic parse
+  const d = new Date(val);
+  if (!isNaN(d)) return d.toLocaleDateString("en-US", {month:"short",day:"numeric",year:"numeric"});
+  return val; // fallback: show raw value
+}
+function today() { return new Date().toISOString().split("T")[0]; }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function num(v) { return (typeof v==="number" && !isNaN(v)) ? v : 0; }
+
+let toastTimer;
+function showToast(msg, type="success") {
+  const el = document.getElementById("toast");
+  el.textContent=msg; el.className=`toast toast-${type}`; el.style.display="block";
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.style.display="none", 3500);
+}
+
+// ── GOOGLE SHEETS API ────────────────────────────────────────
+async function fetchHolds() {
+  const res = await fetch(APPS_SCRIPT_URL);
+  if (!res.ok) throw new Error("Failed to load");
+  return await res.json();
+}
+async function saveHolds(holds) {
+  const res = await fetch(APPS_SCRIPT_URL, {method:"POST", body:JSON.stringify({action:"save",holds})});
+  if (!res.ok) throw new Error("Failed to save");
+}
+
+// ── QB SYNC ──────────────────────────────────────────────────
+// QB A/R Aging export column layout (0-indexed after sheet_to_json):
+// [1]=Customer Name, [2]=Current, [4]=1-30, [6]=31-60, [8]=61-90, [10]=>90
+function handleQBUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), {type:"array"});
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:0});
+      const overdueFromQB = [];
+      for (let i=1; i<rows.length; i++) {
+        const row = rows[i];
+        const name = row[1];
+        if (!name || typeof name!=="string" || !name.trim()) continue;
+        const trimmed = name.trim();
+        if (["A/R Clearing","Account Adjustment","TOTAL","Workders Comp"].includes(trimmed)) continue;
+        // Try both possible column offsets (some QB exports have None columns)
+        const d31a=num(row[4]),  d61a=num(row[6]),  d90a=num(row[8]);
+        const d31b=num(row[6]),  d61b=num(row[8]),  d90b=num(row[10]);
+        const d31=Math.max(d31a,d31b), d61=Math.max(d61a,d61b), d90=Math.max(d90a,d90b);
+        if (d31>0 || d61>0 || d90>0) {
+          const aging=[];
+          if(d31>0) aging.push("31-60 days");
+          if(d61>0) aging.push("61-90 days");
+          if(d90>0) aging.push(">90 days");
+          overdueFromQB.push({name:trimmed, total:d31+d61+d90, aging:aging.join(", ")});
+        }
+      }
+      if (overdueFromQB.length===0) {
+        showToast("⚠️ No overdue customers found. Make sure this is an A/R Aging export.", "error");
+        event.target.value=""; return;
+      }
+      const activeNames = state.holds.filter(h=>h.status==="active").map(h=>h.name.toLowerCase().trim());
+      const qbNames = overdueFromQB.map(c=>c.name.toLowerCase().trim());
+      state.syncPreview = {
+        toAdd:     overdueFromQB.filter(c=>!activeNames.includes(c.name.toLowerCase().trim())),
+        toResolve: state.holds.filter(h=>h.status==="active" && !qbNames.includes(h.name.toLowerCase().trim())),
+        toKeep:    state.holds.filter(h=>h.status==="active" &&  qbNames.includes(h.name.toLowerCase().trim())),
+      };
+      state.modal="syncPreview";
+      renderModal();
+      event.target.value="";
+    } catch(err) {
+      console.error(err);
+      showToast("⚠️ Could not read file. Make sure it's the QuickBooks A/R Aging Excel export.", "error");
+      event.target.value="";
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+async function applySync() {
+  const {toAdd, toResolve} = state.syncPreview;
+  toAdd.forEach(c => state.holds.push({
+    id:uid(), name:c.name, date:today(),
+    reason:`QB sync — overdue: ${c.aging} ($${c.total.toLocaleString()})`,
+    status:"active", autoSynced:true,
+  }));
+  toResolve.forEach(c => {
+    state.holds = state.holds.map(h => h.id===c.id ? {...h, status:"resolved"} : h);
+  });
+  state.modal=null; state.syncPreview=null;
+  render();
+  await persist(`QB sync complete — ${toAdd.length} added, ${toResolve.length} resolved`);
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+function render() {
+  renderHeader(); renderStatusBar(); renderQBBanner();
+  renderControls(); renderCards(); renderModal(); renderFooter();
+}
+
+function renderHeader() {
+  const active = state.holds.filter(h=>h.status==="active").length;
+  document.getElementById("headerSub").textContent =
+    state.loading ? "Loading..." : `${active} customer${active!==1?"s":""} currently on hold`;
+  document.getElementById("headerActions").innerHTML = state.mode==="admin"
+    ? `<span style="font-size:12px;color:#8888aa;margin-right:8px;">Admin Mode</span>
+       <button class="btn btn-ghost" onclick="signOut()">Sign Out</button>`
+    : `<button class="btn btn-primary" onclick="openModal('login')">Admin Login</button>`;
+}
+
+function renderStatusBar() {
+  const bar = document.getElementById("statusBar");
+  const active = state.holds.filter(h=>h.status==="active").length;
+  if (!state.loading && active>0) {
+    bar.style.display="block";
+    bar.textContent=`⛔ ${active} customer${active!==1?"s are":" is"} currently on programming hold — do not proceed with their work`;
+  } else bar.style.display="none";
+}
+
+function renderQBBanner() {
+  // Simply show when admin, hide otherwise
+  document.getElementById("qbBanner").style.display = state.mode==="admin" ? "flex" : "none";
+}
+
+function renderControls() {
+  const ctrl = document.getElementById("controls");
+  if (state.loading) { ctrl.style.display="none"; return; }
+  ctrl.style.display="flex";
+  renderTabs();
+  document.getElementById("addBtnWrap").innerHTML = state.mode==="admin"
+    ? `<button class="btn btn-primary" style="margin-left:auto" onclick="openModal('add')">+ Add Customer</button>` : "";
+}
+
+function renderTabs() {
+  const active=state.holds.filter(h=>h.status==="active").length;
+  const resolved=state.holds.filter(h=>h.status==="resolved").length;
+  document.getElementById("tabs").innerHTML=`
+    <button class="tab ${state.filter==='active'?'active':''}" onclick="setFilter('active')">On Hold (${active})</button>
+    <button class="tab ${state.filter==='resolved'?'active':''}" onclick="setFilter('resolved')">Resolved (${resolved})</button>
+    <button class="tab ${state.filter==='all'?'active':''}" onclick="setFilter('all')">All</button>`;
+}
+
+function renderCards() {
+  const wrap = document.getElementById("cardListWrap");
+  if (state.loading) { wrap.innerHTML=`<div class="spinner">⏳ Loading from database...</div>`; return; }
+  const q = state.search.toLowerCase();
+  const filtered = state.holds
+    .filter(h=>state.filter==="all" ? true : h.status===state.filter)
+    .filter(h=>h.name.toLowerCase().includes(q)||(h.reason||"").toLowerCase().includes(q))
+    .sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if (filtered.length===0) {
+    wrap.innerHTML=`<div class="empty">
+      <div class="empty-icon">${state.filter==="active"?"✅":"🔍"}</div>
+      <div class="empty-title">${state.filter==="active"?"No customers on hold":"No entries found"}</div>
+      <div class="empty-sub">${state.mode==="admin"&&state.filter==="active"?'Click "Add Customer" or use the QB sync above':""}</div>
+    </div>`;
+  } else {
+    wrap.innerHTML=`<div class="hold-list">${filtered.map(cardHTML).join("")}</div>`;
+  }
+}
+
+function cardHTML(h) {
+  const isHold = h.status==="active";
+  const badge = isHold
+    ? `<span class="badge badge-hold"><span class="badge-dot"></span>On Hold</span>`
+    : `<span class="badge badge-resolved"><span class="badge-dot"></span>Resolved</span>`;
+  const autoTag = h.autoSynced ? `<span class="badge badge-auto">QB Synced</span>` : "";
+  const adminBtns = state.mode==="admin" ? `
+    <div class="card-actions">
+      <button class="btn btn-outline btn-sm" onclick="openEdit('${h.id}')">Edit</button>
+      ${isHold?`<button class="btn btn-sm" style="background:#F6FFED;border:1px solid #B7EB8F;color:#27AE60;font-weight:600" onclick="openResolve('${h.id}')">Resolve</button>`:""}
+      <button class="btn btn-danger btn-sm" onclick="openDelete('${h.id}')">Delete</button>
+    </div>` : "";
+  return `<div class="hold-card ${isHold?"on-hold":"resolved"}">
+    <div class="accent-bar"></div>
+    <div class="card-body">
+      <div class="card-top"><span class="customer-name">${esc(h.name)}</span>${badge}${autoTag}</div>
+      <div class="card-meta">
+        <span>📅 On hold since ${fmtDate(h.date)}</span>
+        ${h.reason?`<span>📝 ${esc(h.reason)}</span>`:""}
+      </div>
+    </div>${adminBtns}</div>`;
+}
+
+function renderModal() {
+  const wrap = document.getElementById("modalWrap");
+  if (!state.modal) { wrap.innerHTML=""; return; }
+
+  if (state.modal==="syncPreview") {
+    const {toAdd,toResolve,toKeep}=state.syncPreview;
+    wrap.innerHTML=`<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal">
+      <div class="modal-header"><span class="modal-title">QuickBooks Sync Preview</span><button class="modal-close" onclick="closeModal()">×</button></div>
+      <p style="font-size:13px;color:#666;margin-bottom:8px">Review changes before applying:</p>
+      <div class="sync-preview">
+        ${toAdd.length?`<div class="sync-section-title">➕ Will be added (${toAdd.length})</div>${toAdd.map(c=>`<div class="sync-item sync-add"><span class="sync-dot"></span><span><strong>${esc(c.name)}</strong> — ${esc(c.aging)}</span></div>`).join("")}`:""}
+        ${toResolve.length?`<div class="sync-section-title">✅ Will be resolved — no longer overdue (${toResolve.length})</div>${toResolve.map(c=>`<div class="sync-item sync-resolve"><span class="sync-dot"></span><span>${esc(c.name)}</span></div>`).join("")}`:""}
+        ${toKeep.length?`<div class="sync-section-title">— No change, still overdue (${toKeep.length})</div>${toKeep.map(c=>`<div class="sync-item sync-keep"><span class="sync-dot"></span><span>${esc(c.name)}</span></div>`).join("")}`:""}
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-blue" onclick="applySync()">Apply Sync</button>
+      </div>
+    </div></div>`; return;
+  }
+
+  if (state.modal==="login") {
+    wrap.innerHTML=`<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal">
+      <div class="modal-header"><span class="modal-title">Admin Login</span><button class="modal-close" onclick="closeModal()">×</button></div>
+      <div class="field"><label>Password</label>
+        <input type="password" id="pwInput" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()" autofocus/>
+        <div class="field-error" id="pwError"></div></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="doLogin()">Sign In</button>
+      </div>
+    </div></div>`; return;
+  }
+
+  if (state.modal==="add"||state.modal==="edit") {
+    const h=state.modal==="edit"?state.holds.find(x=>x.id===state.editTarget):null;
+    wrap.innerHTML=`<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal">
+      <div class="modal-header"><span class="modal-title">${state.modal==="add"?"Add Customer to Hold":"Edit Hold"}</span><button class="modal-close" onclick="closeModal()">×</button></div>
+      <div class="field"><label>Customer Name *</label>
+        <input type="text" id="fName" value="${h?esc(h.name):""}" placeholder="e.g. Acme Corp" autofocus/>
+        <div class="field-error" id="fNameErr"></div></div>
+      <div class="field"><label>Date Put on Hold *</label>
+        <input type="date" id="fDate" value="${h?h.date:today()}"/>
+        <div class="field-error" id="fDateErr"></div></div>
+      <div class="field"><label>Reason / Note</label>
+        <textarea id="fReason" rows="3" placeholder="e.g. Invoice #1042 overdue 45 days">${h?esc(h.reason||""):""}</textarea></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="doSave()">${state.modal==="add"?"Add to Hold List":"Save Changes"}</button>
+      </div>
+    </div></div>`; return;
+  }
+
+  if (state.modal==="resolve") {
+    const h=state.holds.find(x=>x.id===state.resolveTarget);
+    wrap.innerHTML=`<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal">
+      <div class="modal-header"><span class="modal-title">Mark as Resolved?</span><button class="modal-close" onclick="closeModal()">×</button></div>
+      <p style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.6"><strong>${esc(h?h.name:"")}</strong> will be removed from the active hold list.</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-green" onclick="doResolve()">Yes, Mark Resolved</button>
+      </div>
+    </div></div>`; return;
+  }
+
+  if (state.modal==="delete") {
+    const h=state.holds.find(x=>x.id===state.deleteTarget);
+    wrap.innerHTML=`<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal">
+      <div class="modal-header"><span class="modal-title">Delete Entry?</span><button class="modal-close" onclick="closeModal()">×</button></div>
+      <p style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.6">Permanently delete <strong>${esc(h?h.name:"")}</strong>? This cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="doDelete()">Delete</button>
+      </div>
+    </div></div>`;
+  }
+}
+
+function renderFooter() {
+  const el=document.getElementById("footerNote");
+  if (state.loading) { el.style.display="none"; return; }
+  el.style.display="block";
+  el.textContent=state.mode==="viewer"
+    ?"Read-only view — contact admin to make changes"
+    :"Admin mode — changes sync to Google Sheets automatically";
+}
+
+// ── ACTIONS ──────────────────────────────────────────────────
+function setFilter(f){state.filter=f;renderTabs();renderCards();}
+function onSearch(val){state.search=val;renderTabs();renderCards();}
+function openModal(t){state.modal=t;renderModal();}
+function closeModal(){state.modal=null;state.editTarget=null;state.syncPreview=null;renderModal();}
+function closeModalIfBg(e){if(e.target.classList.contains("overlay"))closeModal();}
+function openEdit(id){state.editTarget=id;state.modal="edit";renderModal();}
+function openResolve(id){state.resolveTarget=id;state.modal="resolve";renderModal();}
+function openDelete(id){state.deleteTarget=id;state.modal="delete";renderModal();}
+function signOut(){state.mode="viewer";render();showToast("Signed out of admin mode");}
+
+function doLogin(){
+  const pw=document.getElementById("pwInput")?.value||"";
+  if (pw===ADMIN_PASSWORD){
+    state.mode="admin";
+    state.modal=null;
+    render(); // render() calls renderQBBanner() which shows the banner
+    showToast("Welcome, Admin!");
+  } else {
+    const e=document.getElementById("pwError");
+    if(e) e.textContent="Incorrect password.";
+  }
+}
+
+async function doSave(){
+  const name=(document.getElementById("fName")?.value||"").trim();
+  const date=document.getElementById("fDate")?.value||"";
+  const reason=(document.getElementById("fReason")?.value||"").trim();
+  const ne=document.getElementById("fNameErr"),de=document.getElementById("fDateErr");
+  let ok=true;
+  if(!name){if(ne)ne.textContent="Customer name is required.";ok=false;}else{if(ne)ne.textContent="";}
+  if(!date){if(de)de.textContent="Date is required.";ok=false;}else{if(de)de.textContent="";}
+  if(!ok)return;
+  const isAdd=state.modal==="add";
+  if(isAdd) state.holds.push({id:uid(),name,date,reason,status:"active"});
+  else state.holds=state.holds.map(h=>h.id===state.editTarget?{...h,name,date,reason}:h);
+  state.modal=null;state.editTarget=null;render();
+  await persist(isAdd?`${name} added to hold list`:"Entry updated");
+}
+
+async function doResolve(){
+  const h=state.holds.find(x=>x.id===state.resolveTarget);
+  state.holds=state.holds.map(x=>x.id===state.resolveTarget?{...x,status:"resolved"}:x);
+  state.modal=null;render();
+  await persist(`${h?h.name:"Customer"} marked as resolved`);
+}
+
+async function doDelete(){
+  const h=state.holds.find(x=>x.id===state.deleteTarget);
+  state.holds=state.holds.filter(x=>x.id!==state.deleteTarget);
+  state.modal=null;render();
+  await persist(`${h?h.name:"Entry"} deleted`);
+}
+
+async function persist(successMsg){
+  const bar=document.getElementById("syncBar");
+  bar.style.display="block";
+  try{
+    await saveHolds(state.holds);
+    bar.style.display="none";
+    showToast(successMsg||"Saved!");
+    renderHeader();renderStatusBar();renderTabs();
+  }catch(err){
+    bar.style.display="none";
+    showToast("⚠️ Save failed — check your connection","error");
+    console.error(err);
+  }
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+window.addEventListener("DOMContentLoaded",async()=>{
+  render();
+  try{ state.holds=await fetchHolds(); }
+  catch(err){ console.error(err); showToast("⚠️ Could not load data","error"); }
+  state.loading=false;
+  render();
+});
+</script>
+</body>
+</html>
