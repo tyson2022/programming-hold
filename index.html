@@ -10,13 +10,13 @@
 :root{--red:#C0392B;--red-light:#FFF1F0;--red-border:#FFCCC7;--green:#27AE60;--green-light:#F6FFED;--green-border:#B7EB8F;--blue:#1a73e8;--blue-light:#e8f0fe;--blue-border:#aecbfa;--dark:#1C1C2E;--mid:#4a4a6a;--bg:#F4F2ED;--card:#fff;--border:#E5E2DA;--serif:'DM Serif Display',Georgia,serif;--sans:'DM Sans',sans-serif;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);font-family:var(--sans);color:var(--dark);min-height:100vh;}
-header{background:var(--dark);padding:0 32px;height:66px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 16px rgba(0,0,0,0.25);position:sticky;top:0;z-index:100;}
+header{background:var(--dark);padding:0 32px;height:66px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 16px rgba(0,0,0,.25);position:sticky;top:0;z-index:100;}
 .header-left{display:flex;align-items:center;gap:14px;}
 .logo{width:38px;height:38px;border-radius:9px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:20px;}
-.header-title{font-family:var(--serif);font-size:19px;color:#fff;letter-spacing:0.3px;}
+.header-title{font-family:var(--serif);font-size:19px;color:#fff;}
 .header-sub{font-size:11px;color:#8888aa;letter-spacing:1px;text-transform:uppercase;margin-top:1px;}
-.btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;cursor:pointer;border:none;transition:opacity .15s,transform .1s;}
-.btn:hover{opacity:.88;transform:translateY(-1px);}
+.btn{font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;cursor:pointer;border:none;transition:opacity .15s;}
+.btn:hover{opacity:.85;}
 .btn-primary{background:var(--red);color:#fff;}
 .btn-blue{background:var(--blue);color:#fff;}
 .btn-ghost{background:rgba(255,255,255,.1);color:#ddd;border:1px solid rgba(255,255,255,.15);}
@@ -30,24 +30,23 @@ main{max-width:920px;margin:0 auto;padding:28px 24px;}
 .qb-text{flex:1;min-width:180px;}
 .qb-title{font-weight:700;font-size:14px;color:var(--blue);margin-bottom:2px;}
 .qb-sub{font-size:12px;color:#555;line-height:1.4;}
-.qb-label{display:inline-flex;align-items:center;gap:7px;background:var(--blue);color:#fff;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;white-space:nowrap;font-family:var(--sans);}
+.qb-label{display:inline-flex;align-items:center;gap:7px;background:var(--blue);color:#fff;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans);}
 .qb-label:hover{opacity:.88;}
 #qbFileInput{display:none;}
 .controls{display:flex;gap:12px;align-items:center;margin-bottom:22px;flex-wrap:wrap;}
 .search-wrap{position:relative;flex:1 1 220px;max-width:300px;}
-.search-wrap input{width:100%;padding:9px 14px 9px 36px;border:1.5px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:13.5px;background:#fff;outline:none;transition:border-color .2s;caret-color:var(--dark);}
+.search-wrap input{width:100%;padding:9px 14px 9px 36px;border:1.5px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:13.5px;background:#fff;outline:none;}
 .search-wrap input:focus{border-color:var(--dark);}
 .search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;color:#aaa;pointer-events:none;}
 .tabs{display:flex;gap:5px;}
-.tab{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--mid);font-family:var(--sans);transition:all .15s;}
+.tab{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--mid);font-family:var(--sans);}
 .tab.active{background:var(--dark);color:#fff;border-color:var(--dark);font-weight:700;}
 .empty{text-align:center;padding:70px 20px;background:#fff;border-radius:14px;border:2px dashed var(--border);}
 .empty-icon{font-size:44px;margin-bottom:14px;}
 .empty-title{font-family:var(--serif);font-size:20px;color:#888;}
 .empty-sub{font-size:13px;color:#bbb;margin-top:6px;}
 .hold-list{display:flex;flex-direction:column;gap:10px;}
-.hold-card{background:var(--card);border-radius:13px;border:1.5px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.04);transition:box-shadow .2s;overflow:hidden;}
-.hold-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.09);}
+.hold-card{background:var(--card);border-radius:13px;border:1.5px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.04);overflow:hidden;}
 .hold-card.on-hold{border-color:var(--red-border);}
 .hold-card.resolved{border-color:var(--green-border);opacity:.85;}
 .card-header{padding:18px 20px;display:flex;align-items:flex-start;gap:16px;cursor:pointer;user-select:none;}
@@ -57,7 +56,7 @@ main{max-width:920px;margin:0 auto;padding:28px 24px;}
 .card-body{flex:1;min-width:0;}
 .card-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:5px;}
 .customer-name{font-family:var(--serif);font-size:18px;color:var(--dark);}
-.badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:3px 11px;font-size:11.5px;font-weight:600;letter-spacing:.4px;}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:3px 11px;font-size:11.5px;font-weight:600;}
 .badge-hold{background:var(--red-light);border:1px solid var(--red-border);color:var(--red);}
 .badge-resolved{background:var(--green-light);border:1px solid var(--green-border);color:var(--green);}
 .badge-auto{background:var(--blue-light);border:1px solid var(--blue-border);color:var(--blue);font-size:10px;}
@@ -66,18 +65,17 @@ main{max-width:920px;margin:0 auto;padding:28px 24px;}
 .badge-resolved .badge-dot{background:var(--green);}
 .card-meta{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:#777;}
 .card-actions{display:flex;gap:7px;align-items:center;flex-shrink:0;flex-wrap:wrap;}
-.invoice-panel{display:none;border-top:1px solid var(--border);background:#fafafa;padding:0 20px 16px 40px;}
-.invoice-panel.open{display:block;}
+.invoice-panel{border-top:1px solid var(--border);background:#fafafa;padding:0 20px 16px 40px;}
 .invoice-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:12px;}
 .invoice-table th{text-align:left;padding:6px 10px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mid);border-bottom:1.5px solid var(--border);}
 .invoice-table td{padding:8px 10px;border-bottom:1px solid #f0ede6;color:#444;}
 .invoice-table tr:last-child td{border-bottom:none;}
-.invoice-table .amount{text-align:right;font-weight:600;font-family:monospace;font-size:13px;}
+.amount{text-align:right;font-weight:600;font-family:monospace;font-size:13px;}
 .aging-chip{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;}
 .aging-31{background:#fff3cd;color:#856404;}
 .aging-61{background:#ffe0b2;color:#7c4c00;}
 .aging-90{background:var(--red-light);color:var(--red);}
-.invoice-total{display:flex;justify-content:flex-end;padding:10px 10px 0;font-weight:700;font-size:14px;color:var(--dark);}
+.invoice-total{display:flex;justify-content:flex-end;padding:10px 10px 0;font-weight:700;font-size:14px;}
 .sync-preview{max-height:360px;overflow-y:auto;margin-bottom:18px;}
 .sync-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin-bottom:4px;font-size:13px;background:var(--green-light);}
 .sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--green);}
@@ -89,7 +87,7 @@ main{max-width:920px;margin:0 auto;padding:28px 24px;}
 .modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:#aaa;line-height:1;padding:0 4px;}
 .field{margin-bottom:18px;}
 .field label{display:block;font-size:13px;font-weight:600;color:var(--mid);margin-bottom:7px;}
-.field input,.field textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:14px;outline:none;background:#fafafa;transition:border-color .2s;}
+.field input,.field textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:var(--sans);font-size:14px;outline:none;background:#fafafa;}
 .field input:focus,.field textarea:focus{border-color:var(--dark);background:#fff;}
 .field textarea{resize:vertical;}
 .field-error{color:var(--red);font-size:12px;margin-top:5px;}
@@ -98,19 +96,18 @@ main{max-width:920px;margin:0 auto;padding:28px 24px;}
 .toast{position:fixed;bottom:28px;right:28px;color:#fff;padding:13px 22px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:999;max-width:340px;}
 .toast-success{background:var(--dark);}
 .toast-error{background:var(--red);}
-.status-bar{background:var(--red);color:#fff;text-align:center;padding:10px;font-size:13px;font-weight:600;letter-spacing:.3px;}
+.status-bar{background:var(--red);color:#fff;text-align:center;padding:10px;font-size:13px;font-weight:600;}
 .sync-bar{background:#fffbe6;border-bottom:1px solid #ffe58f;color:#7c5a00;text-align:center;padding:8px;font-size:12px;}
 .spinner{text-align:center;padding:60px;color:#aaa;font-size:15px;}
 .footer-note{text-align:center;margin-top:32px;font-size:12px;color:#bbb;}
-@media(max-width:600px){header{padding:0 16px;}main{padding:20px 14px;}.modal{padding:24px 20px;margin:16px;}.invoice-panel{padding:0 12px 16px 20px;}}
 </style>
 </head>
 <body>
-<div class="sync-bar" id="syncBar" style="display:none">⏳ Saving changes...</div>
+<div class="sync-bar" id="syncBar" style="display:none">Saving...</div>
 <div class="status-bar" id="statusBar" style="display:none"></div>
 <header>
   <div class="header-left">
-    <div class="logo">⛔</div>
+    <div class="logo">&#x26D4;</div>
     <div>
       <div class="header-title">Programming Hold Board</div>
       <div class="header-sub" id="headerSub">Loading...</div>
@@ -120,348 +117,516 @@ main{max-width:920px;margin:0 auto;padding:28px 24px;}
 </header>
 <main>
   <div class="qb-banner" id="qbBanner" style="display:none">
-    <div class="qb-icon">📊</div>
+    <div class="qb-icon">&#x1F4CA;</div>
     <div class="qb-text">
       <div class="qb-title">Sync from QuickBooks</div>
-      <div class="qb-sub">Export the <strong>A/R Aging Detail</strong> report from QuickBooks as Excel (.xlsx) and upload it here.</div>
+      <div class="qb-sub">Export the <strong>A/R Aging Detail</strong> report as Excel and upload here.</div>
     </div>
-    <label class="qb-label">📂 Upload QB Export<input type="file" id="qbFileInput" accept=".xlsx,.xls" onchange="handleQBUpload(event)"/></label>
+    <label class="qb-label">&#x1F4C2; Upload QB Export<input type="file" id="qbFileInput" accept=".xlsx,.xls" /></label>
   </div>
   <div class="controls" id="controls" style="display:none">
-    <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="searchInput" placeholder="Search customers..." oninput="onSearch(this.value)"/></div>
+    <div class="search-wrap">
+      <span class="search-icon">&#x1F50D;</span>
+      <input type="text" id="searchInput" placeholder="Search customers..." />
+    </div>
     <div class="tabs" id="tabs"></div>
     <div id="addBtnWrap"></div>
   </div>
-  <div id="cardListWrap"><div class="spinner">⏳ Loading from database...</div></div>
+  <div id="cardListWrap"><div class="spinner">Loading...</div></div>
   <div class="footer-note" id="footerNote" style="display:none"></div>
 </main>
 <div id="modalWrap"></div>
 <div class="toast" id="toast" style="display:none"></div>
+
 <script>
-const ADMIN_PASSWORD="kss2000";
-const APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbwCs4MK1jtf0lKb2tW6kJKncR4oizFnKo1w3WDflr_J5cwjwzlGtbjW8rrogr3xB7q6JA/exec";
-let state={holds:[],mode:"viewer",filter:"active",search:"",modal:null,editTarget:null,resolveTarget:null,deleteTarget:null,loading:true,syncPreview:null,expanded:{}};
+var ADMIN_PASSWORD = "kss2000";
+var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCs4MK1jtf0lKb2tW6kJKncR4oizFnKo1w3WDflr_J5cwjwzlGtbjW8rrogr3xB7q6JA/exec";
 
-// Convert Excel serial date number to display string
-function excelDateToStr(serial){
-  const d=new Date(Math.round((serial-25569)*86400*1000));
-  return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-}
-function fmtDate(val){
-  if(!val) return "";
-  if(typeof val==="number") return excelDateToStr(val);
-  if(typeof val==="string"){
-    if(/^\d{4}-\d{2}-\d{2}$/.test(val)){const[y,m,d]=val.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});}
-    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val)){const[m,d,y]=val.split("/").map(Number);return new Date(y,m-1,d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});}
+var state = {
+  holds: [], mode: "viewer", filter: "active", search: "",
+  modal: null, editTarget: null, resolveTarget: null, deleteTarget: null,
+  loading: true, syncPreview: null, expanded: {}
+};
+
+// ── HELPERS ──────────────────────────────────────────────────
+function fmtDate(val) {
+  if (!val) return "";
+  if (typeof val === "number") {
+    var d = new Date(Math.round((val - 25569) * 86400 * 1000));
+    return d.toLocaleDateString("en-US", {month:"short",day:"numeric",year:"numeric"});
   }
-  const d=new Date(val);
-  if(!isNaN(d)) return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-  return String(val);
+  if (typeof val === "string") {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+      var p = val.split("-").map(Number);
+      return new Date(p[0], p[1]-1, p[2]).toLocaleDateString("en-US", {month:"short",day:"numeric",year:"numeric"});
+    }
+    if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val)) {
+      var p = val.split("/").map(Number);
+      return new Date(p[2], p[0]-1, p[1]).toLocaleDateString("en-US", {month:"short",day:"numeric",year:"numeric"});
+    }
+  }
+  var d = new Date(val);
+  return isNaN(d) ? String(val) : d.toLocaleDateString("en-US", {month:"short",day:"numeric",year:"numeric"});
 }
-function fmtMoney(v){if(!v&&v!==0)return "$0.00";return "$"+Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});}
-function today(){return new Date().toISOString().split("T")[0];}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function fmtMoney(v) {
+  if (!v && v !== 0) return "$0.00";
+  return "$" + Number(v).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function todayStr() { return new Date().toISOString().split("T")[0]; }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
-let toastTimer;
-function showToast(msg,type="success"){
-  const el=document.getElementById("toast");
-  el.textContent=msg;el.className="toast toast-"+type;el.style.display="block";
-  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.style.display="none",4000);
+var toastTimer;
+function showToast(msg, type) {
+  var el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = "toast toast-" + (type || "success");
+  el.style.display = "block";
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.style.display = "none"; }, 4000);
 }
 
-async function fetchHolds(){const res=await fetch(APPS_SCRIPT_URL);if(!res.ok)throw new Error("Failed");return await res.json();}
-async function saveHolds(holds){const res=await fetch(APPS_SCRIPT_URL,{method:"POST",body:JSON.stringify({action:"save",holds})});if(!res.ok)throw new Error("Failed");}
+// ── API ───────────────────────────────────────────────────────
+function fetchHolds() {
+  return fetch(APPS_SCRIPT_URL).then(function(r){ return r.json(); });
+}
+function saveHolds(holds) {
+  return fetch(APPS_SCRIPT_URL, {method:"POST", body:JSON.stringify({action:"save", holds:holds})});
+}
 
-// QB A/R Aging DETAIL parser
-// Columns (0-based): 0=section header, 3=Type, 5=Date, 7=Invoice#, 11=Customer, 15=Due Date, 19=Aging days, 21=Amount
-// KEY FIX: Use the section header ("31 - 60", "61 - 90", "> 90") as the authoritative aging bucket,
-// not the raw aging number — QB sometimes stores stale/incorrect day counts for very old invoices.
-// For display we calculate days from invoice date to today if the raw aging looks wrong (<= 1).
-function handleQBUpload(event){
-  const file=event.target.files[0];
-  if(!file) return;
-  const reader=new FileReader();
-  reader.onload=function(e){
-    try{
-      const wb=XLSX.read(new Uint8Array(e.target.result),{type:"array"});
-      const ws=wb.Sheets[wb.SheetNames[0]];
-      const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null,raw:true});
+// ── QB SYNC ───────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("qbFileInput").addEventListener("change", handleQBUpload);
+  document.getElementById("searchInput").addEventListener("input", function(){ state.search = this.value; renderTabs(); renderCards(); });
+});
 
-      const HOLD_SECTIONS=["31 - 60","61 - 90","> 90"];
-      const ALL_SECTIONS=["Current","1 - 30","31 - 60","61 - 90","> 90"];
-      const SKIP_NAMES=["A/R Clearing","Account Adjustment","ChargeItPro","Openedge","Brecheen Pipe","Structural Steel of Carolina","Accelerated","Workders Comp"];
-
-      let currentSection=null;
-      let inHoldSection=false;
-      const customerMap={};
-      const todayMs=Date.now();
-
-      for(let i=0;i<rows.length;i++){
-        const row=rows[i];
-        if(!row) continue;
-        const col0=row[0]!=null?String(row[0]).trim():"";
-
-        if(ALL_SECTIONS.includes(col0)){
-          currentSection=col0;
-          inHoldSection=HOLD_SECTIONS.includes(col0);
-          continue;
+function handleQBUpload(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      var wb = XLSX.read(new Uint8Array(ev.target.result), {type:"array"});
+      var rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:null, raw:true});
+      var HOLD_SECTIONS = {"31 - 60":true, "61 - 90":true, "> 90":true};
+      var ALL_SECTIONS  = {"Current":true, "1 - 30":true, "31 - 60":true, "61 - 90":true, "> 90":true};
+      var SKIP = ["a/r clearing","account adjustment","chargeitpro","openedge","brecheen pipe","workders comp"];
+      var currentSection = null, inHold = false, customerMap = {};
+      var todayMs = Date.now();
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        if (!row) continue;
+        var col0 = row[0] != null ? String(row[0]).trim() : "";
+        if (ALL_SECTIONS[col0]) { currentSection = col0; inHold = !!HOLD_SECTIONS[col0]; continue; }
+        if (!inHold || col0.indexOf("Total") === 0) continue;
+        var type = row[3] ? String(row[3]).trim() : "";
+        if (type !== "Invoice") continue;
+        var name = row[11] ? String(row[11]).trim() : "";
+        if (!name) continue;
+        var nameLow = name.toLowerCase();
+        var skip = false;
+        for (var s = 0; s < SKIP.length; s++) { if (nameLow.indexOf(SKIP[s]) !== -1) { skip = true; break; } }
+        if (skip) continue;
+        var amount = parseFloat(row[21]);
+        if (isNaN(amount) || amount <= 0) continue;
+        var agingBucket = currentSection === "61 - 90" ? "61-90" : currentSection === "> 90" ? ">90" : "31-60";
+        var agingDays = 0;
+        if (typeof row[5] === "number") {
+          var invMs = Math.round((row[5] - 25569) * 86400 * 1000);
+          agingDays = Math.floor((todayMs - invMs) / 86400000);
         }
-        if(!inHoldSection) continue;
-        if(col0.startsWith("Total")) continue;
-
-        const type=row[3]!=null?String(row[3]).trim():"";
-        if(type!=="Invoice") continue;
-
-        const name=row[11]!=null?String(row[11]).trim():"";
-        if(!name||SKIP_NAMES.some(s=>name.toLowerCase().includes(s.toLowerCase()))) continue;
-
-        const invoiceNum=row[7]!=null?String(row[7]).trim():"";
-        const dateVal=row[5];
-        const dueDateVal=row[15];
-        const amountRaw=row[21];
-        const amount=parseFloat(amountRaw);
-        if(isNaN(amount)||amount<=0) continue;
-
-        // Determine aging bucket from section (authoritative)
-        let agingBucket=currentSection==="61 - 90"?"61-90":currentSection==="> 90"?">90":"31-60";
-
-        // Calculate actual days from invoice date for display
-        // dateVal is an Excel serial number (days since 1900-01-01)
-        let agingDays=null;
-        if(typeof dateVal==="number"){
-          const invoiceMs=Math.round((dateVal-25569)*86400*1000);
-          agingDays=Math.floor((todayMs-invoiceMs)/86400000);
+        if (agingDays < 1) {
+          var raw = row[19] != null ? parseInt(String(row[19])) : 0;
+          agingDays = raw > 1 ? raw : (currentSection === "> 90" ? 91 : currentSection === "61 - 90" ? 61 : 31);
         }
-        // Fallback: use raw aging value only if it looks reasonable (> 1)
-        if(agingDays===null||agingDays<1){
-          const rawAging=row[19]!=null?parseInt(String(row[19])):0;
-          agingDays=rawAging>1?rawAging:(currentSection==="> 90"?90:currentSection==="61 - 90"?61:31);
-        }
-
-        if(!customerMap[name]) customerMap[name]={invoices:[]};
-        customerMap[name].invoices.push({invoiceNum,date:dateVal,dueDate:dueDateVal,amount,aging:agingDays,agingBucket});
+        if (!customerMap[name]) customerMap[name] = {invoices:[]};
+        customerMap[name].invoices.push({
+          invoiceNum: row[7] ? String(row[7]).trim() : "",
+          date: row[5], dueDate: row[15],
+          amount: amount, aging: agingDays, agingBucket: agingBucket
+        });
       }
-
-      const customers=Object.keys(customerMap);
-      if(customers.length===0){
-        showToast("No overdue invoices found (31+ days). Check this is an A/R Aging Detail export.","error");
-        event.target.value="";return;
+      var names = Object.keys(customerMap);
+      if (names.length === 0) {
+        showToast("No overdue invoices found. Make sure this is the A/R Aging Detail export.", "error");
+        e.target.value = ""; return;
       }
-
-      const newHolds=customers.map(function(name){
-        const data=customerMap[name];
-        const total=data.invoices.reduce(function(s,inv){return s+inv.amount;},0);
-        return{id:uid(),name:name,date:today(),reason:"QB sync — "+data.invoices.length+" invoice"+(data.invoices.length!==1?"s":"")+", total "+fmtMoney(total),status:"active",autoSynced:true,invoices:data.invoices,totalOwed:total};
-      }).sort(function(a,b){return b.totalOwed-a.totalOwed;});
-
-      state.syncPreview={newHolds:newHolds};
-      state.modal="syncPreview";
+      var newHolds = names.map(function(name) {
+        var data = customerMap[name];
+        var total = data.invoices.reduce(function(s,inv){ return s + inv.amount; }, 0);
+        return { id:uid(), name:name, date:todayStr(),
+          reason:"QB sync — " + data.invoices.length + " invoice" + (data.invoices.length !== 1 ? "s" : "") + ", total " + fmtMoney(total),
+          status:"active", autoSynced:true, invoices:data.invoices, totalOwed:total };
+      }).sort(function(a,b){ return b.totalOwed - a.totalOwed; });
+      state.syncPreview = {newHolds: newHolds};
+      state.modal = "syncPreview";
       renderModal();
-      event.target.value="";
-    }catch(err){
+      e.target.value = "";
+    } catch(err) {
       console.error(err);
-      showToast("Could not read file. Make sure it is the A/R Aging Detail Excel export.","error");
-      event.target.value="";
+      showToast("Could not read file. Use A/R Aging Detail Excel export.", "error");
+      e.target.value = "";
     }
   };
   reader.readAsArrayBuffer(file);
 }
 
-async function applySync(){
-  state.holds=state.syncPreview.newHolds;
-  state.expanded={};
-  state.modal=null;state.syncPreview=null;
+function applySync() {
+  state.holds = state.syncPreview.newHolds;
+  state.expanded = {};
+  state.modal = null; state.syncPreview = null;
   render();
-  await persist("QB sync complete — "+state.holds.length+" customers on hold");
+  persist("QB sync complete — " + state.holds.length + " customers on hold");
 }
 
-function render(){renderHeader();renderStatusBar();renderQBBanner();renderControls();renderCards();renderModal();renderFooter();}
-
-function renderHeader(){
-  const active=state.holds.filter(function(h){return h.status==="active";}).length;
-  document.getElementById("headerSub").textContent=state.loading?"Loading...":active+" customer"+(active!==1?"s":"")+" currently on hold";
-  document.getElementById("headerActions").innerHTML=state.mode==="admin"
-    ?'<span style="font-size:12px;color:#8888aa;margin-right:8px;">Admin Mode</span><button class="btn btn-ghost" onclick="signOut()">Sign Out</button>'
-    :'<button class="btn btn-primary" onclick="openModal(\'login\')">Admin Login</button>';
-}
-function renderStatusBar(){
-  const bar=document.getElementById("statusBar");
-  const active=state.holds.filter(function(h){return h.status==="active";}).length;
-  if(!state.loading&&active>0){bar.style.display="block";bar.textContent="⛔ "+active+" customer"+(active!==1?"s are":" is")+" currently on programming hold — do not proceed with their work";}
-  else bar.style.display="none";
-}
-function renderQBBanner(){document.getElementById("qbBanner").style.display=state.mode==="admin"?"flex":"none";}
-function renderControls(){
-  const ctrl=document.getElementById("controls");
-  if(state.loading){ctrl.style.display="none";return;}
-  ctrl.style.display="flex";renderTabs();
-  document.getElementById("addBtnWrap").innerHTML=state.mode==="admin"?'<button class="btn btn-primary" style="margin-left:auto" onclick="openModal(\'add\')">+ Add Customer</button>':"";
-}
-function renderTabs(){
-  const a=state.holds.filter(function(h){return h.status==="active";}).length;
-  const r=state.holds.filter(function(h){return h.status==="resolved";}).length;
-  document.getElementById("tabs").innerHTML='<button class="tab '+(state.filter==="active"?"active":"")+'" onclick="setFilter(\'active\')">On Hold ('+a+')</button><button class="tab '+(state.filter==="resolved"?"active":"")+'" onclick="setFilter(\'resolved\')">Resolved ('+r+')</button><button class="tab '+(state.filter==="all"?"active":"")+'" onclick="setFilter(\'all\')">All</button>';
-}
-function renderCards(){
-  const wrap=document.getElementById("cardListWrap");
-  if(state.loading){wrap.innerHTML='<div class="spinner">⏳ Loading from database...</div>';return;}
-  const q=state.search.toLowerCase();
-  const filtered=state.holds.filter(function(h){return state.filter==="all"?true:h.status===state.filter;}).filter(function(h){return h.name.toLowerCase().includes(q)||(h.reason||"").toLowerCase().includes(q);}).sort(function(a,b){return(b.totalOwed||0)-(a.totalOwed||0);});
-  if(filtered.length===0){
-    wrap.innerHTML='<div class="empty"><div class="empty-icon">'+(state.filter==="active"?"✅":"🔍")+'</div><div class="empty-title">'+(state.filter==="active"?"No customers on hold":"No entries found")+'</div><div class="empty-sub">'+(state.mode==="admin"&&state.filter==="active"?'Upload a QB export or click "Add Customer"':"")+'</div></div>';
-  }else{
-    wrap.innerHTML='<div class="hold-list">'+filtered.map(cardHTML).join("")+"</div>";
-    attachCardListeners();
-  }
+// ── RENDER ────────────────────────────────────────────────────
+function render() {
+  renderHeader(); renderStatusBar(); renderQBBanner(); renderControls(); renderCards(); renderModal(); renderFooter();
 }
 
-function cardHTML(h){
-  const isHold=h.status==="active";
-  const isExp=!!state.expanded[h.id];
-  const badge=isHold?'<span class="badge badge-hold"><span class="badge-dot"></span>On Hold</span>':'<span class="badge badge-resolved"><span class="badge-dot"></span>Resolved</span>';
-  const autoTag=h.autoSynced?'<span class="badge badge-auto">QB Synced</span>':"";
-  const totalTag=h.totalOwed?'<span style="font-size:13px;font-weight:700;color:var(--red);margin-left:4px;">'+fmtMoney(h.totalOwed)+'</span>':"";
-  const expandHint=h.invoices&&h.invoices.length?'<span style="font-size:12px;color:#aaa;margin-left:6px;">'+(isExp?"▲":"▼")+" "+h.invoices.length+" invoice"+(h.invoices.length!==1?"s":"")+"</span>":"";
-  const adminBtns=state.mode==="admin"?'<div class="card-actions"><button class="btn btn-outline btn-sm" data-action="edit" data-id="'+h.id+'">Edit</button>'+(isHold?'<button class="btn btn-sm" style="background:#F6FFED;border:1px solid #B7EB8F;color:#27AE60;font-weight:600" data-action="resolve" data-id="'+h.id+'">Resolve</button>':'')+'<button class="btn btn-danger btn-sm" data-action="delete" data-id="'+h.id+'">Delete</button></div>':"";
-
-  let invoicePanel="";
-  if(h.invoices&&h.invoices.length&&isExp){
-    const irows=h.invoices.map(function(inv){
-      const chipClass=inv.agingBucket===">90"?"aging-90":inv.agingBucket==="61-90"?"aging-61":"aging-31";
-      return '<tr><td>'+esc(inv.invoiceNum||"—")+'</td><td>'+fmtDate(inv.date)+'</td><td>'+fmtDate(inv.dueDate)+'</td><td><span class="aging-chip '+chipClass+'">'+inv.aging+' days</span></td><td class="amount">'+fmtMoney(inv.amount)+'</td></tr>';
-    }).join("");
-    const tot=h.invoices.reduce(function(s,i){return s+i.amount;},0);
-    invoicePanel='<div class="invoice-panel open"><table class="invoice-table"><thead><tr><th>Invoice #</th><th>Date</th><th>Due Date</th><th>Aging</th><th style="text-align:right">Amount</th></tr></thead><tbody>'+irows+'</tbody></table><div class="invoice-total">Total Overdue: '+fmtMoney(tot)+'</div></div>';
-  }else if(h.invoices&&h.invoices.length){
-    invoicePanel='<div class="invoice-panel"></div>';
-  }
-
-  return '<div class="hold-card '+(isHold?"on-hold":"resolved")+'" data-id="'+h.id+'"><div class="card-header"><div class="accent-bar"></div><div class="card-body"><div class="card-top"><span class="customer-name">'+esc(h.name)+'</span>'+badge+autoTag+totalTag+expandHint+'</div><div class="card-meta"><span>&#x1F4C5; On hold since '+fmtDate(h.date)+'</span>'+(h.reason?'<span>&#x1F4DD; '+esc(h.reason)+'</span>':"")+'</div></div>'+adminBtns+'</div>'+invoicePanel+'</div>';
+function renderHeader() {
+  var active = state.holds.filter(function(h){ return h.status === "active"; }).length;
+  document.getElementById("headerSub").textContent = state.loading ? "Loading..." : active + " customer" + (active !== 1 ? "s" : "") + " currently on hold";
+  document.getElementById("headerActions").innerHTML = state.mode === "admin"
+    ? '<span style="font-size:12px;color:#8888aa;margin-right:8px;">Admin Mode</span><button class="btn btn-ghost" id="signOutBtn">Sign Out</button>'
+    : '<button class="btn btn-primary" id="loginBtn">Admin Login</button>';
+  var lb = document.getElementById("loginBtn");
+  if (lb) lb.onclick = function(){ openModal("login"); };
+  var sb = document.getElementById("signOutBtn");
+  if (sb) sb.onclick = function(){ state.mode = "viewer"; render(); showToast("Signed out"); };
 }
 
-function toggleExpand(id){state.expanded[id]=!state.expanded[id];renderCards();}
+function renderStatusBar() {
+  var bar = document.getElementById("statusBar");
+  var active = state.holds.filter(function(h){ return h.status === "active"; }).length;
+  if (!state.loading && active > 0) {
+    bar.style.display = "block";
+    bar.textContent = "⛔ " + active + " customer" + (active !== 1 ? "s are" : " is") + " currently on programming hold — do not proceed with their work";
+  } else { bar.style.display = "none"; }
+}
 
-function attachCardListeners(){
-  const wrap=document.getElementById("cardListWrap");
-  if(!wrap) return;
-  wrap.addEventListener("click",function(e){
-    // Handle admin action buttons
-    const btn=e.target.closest("[data-action]");
-    if(btn){
-      e.stopPropagation();
-      const id=btn.getAttribute("data-id");
-      const action=btn.getAttribute("data-action");
-      if(action==="edit") openEdit(id);
-      else if(action==="resolve") openResolve(id);
-      else if(action==="delete") openDelete(id);
-      return;
-    }
-    // Handle card expand — click anywhere on card-header
-    const header=e.target.closest(".card-header");
-    if(header){
-      const card=header.closest("[data-id]");
-      if(card) toggleExpand(card.getAttribute("data-id"));
-    }
+function renderQBBanner() {
+  document.getElementById("qbBanner").style.display = state.mode === "admin" ? "flex" : "none";
+}
+
+function renderControls() {
+  var ctrl = document.getElementById("controls");
+  if (state.loading) { ctrl.style.display = "none"; return; }
+  ctrl.style.display = "flex";
+  renderTabs();
+  var abw = document.getElementById("addBtnWrap");
+  abw.innerHTML = state.mode === "admin" ? '<button class="btn btn-primary" id="addBtn" style="margin-left:auto">+ Add Customer</button>' : "";
+  var ab = document.getElementById("addBtn");
+  if (ab) ab.onclick = function(){ openModal("add"); };
+}
+
+function renderTabs() {
+  var a = state.holds.filter(function(h){ return h.status === "active"; }).length;
+  var r = state.holds.filter(function(h){ return h.status === "resolved"; }).length;
+  var tabsEl = document.getElementById("tabs");
+  tabsEl.innerHTML = "";
+  var defs = [["active","On Hold ("+a+")"],["resolved","Resolved ("+r+")"],["all","All"]];
+  defs.forEach(function(d) {
+    var btn = document.createElement("button");
+    btn.className = "tab" + (state.filter === d[0] ? " active" : "");
+    btn.textContent = d[1];
+    btn.onclick = function(){ state.filter = d[0]; renderTabs(); renderCards(); };
+    tabsEl.appendChild(btn);
   });
 }
 
-function renderModal(){
-  const wrap=document.getElementById("modalWrap");
-  if(!state.modal){wrap.innerHTML="";return;}
-  if(state.modal==="syncPreview"){
-    const nh=state.syncPreview.newHolds;
-    const total=nh.reduce(function(s,h){return s+(h.totalOwed||0);},0);
-    wrap.innerHTML='<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal"><div class="modal-header"><span class="modal-title">QuickBooks Sync Preview</span><button class="modal-close" onclick="closeModal()">×</button></div><div class="warning-box">⚠️ <strong>Fresh Start:</strong> This will replace your entire current hold list with '+nh.length+' customers from QuickBooks.</div><p style="font-size:13px;color:#666;margin-bottom:10px;">Importing <strong>'+nh.length+'</strong> customers — total overdue: <strong>'+fmtMoney(total)+'</strong></p><div class="sync-preview">'+nh.map(function(h){return'<div class="sync-item"><span class="sync-dot"></span><span><strong>'+esc(h.name)+'</strong> — '+h.invoices.length+' invoice'+(h.invoices.length!==1?"s":"")+" — "+fmtMoney(h.totalOwed)+'</span></div>';}).join("")+'</div><div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-blue" onclick="applySync()">Replace &amp; Import</button></div></div></div>';
+function renderCards() {
+  var wrap = document.getElementById("cardListWrap");
+  if (state.loading) { wrap.innerHTML = '<div class="spinner">Loading...</div>'; return; }
+  var q = state.search.toLowerCase();
+  var filtered = state.holds
+    .filter(function(h){ return state.filter === "all" ? true : h.status === state.filter; })
+    .filter(function(h){ return h.name.toLowerCase().indexOf(q) !== -1 || (h.reason||"").toLowerCase().indexOf(q) !== -1; })
+    .sort(function(a,b){ return (b.totalOwed||0) - (a.totalOwed||0); });
+
+  if (filtered.length === 0) {
+    wrap.innerHTML = '<div class="empty"><div class="empty-icon">' + (state.filter==="active"?"✅":"🔍") + '</div><div class="empty-title">' + (state.filter==="active"?"No customers on hold":"No entries found") + '</div><div class="empty-sub">' + (state.mode==="admin"&&state.filter==="active"?'Upload a QB export or click "Add Customer"':"") + '</div></div>';
     return;
   }
-  if(state.modal==="login"){
-    wrap.innerHTML='<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal"><div class="modal-header"><span class="modal-title">Admin Login</span><button class="modal-close" onclick="closeModal()">×</button></div><div class="field"><label>Password</label><input type="password" id="pwInput" placeholder="Enter admin password" onkeydown="if(event.key===\'Enter\')doLogin()" autofocus/><div class="field-error" id="pwError"></div></div><div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="doLogin()">Sign In</button></div></div></div>';
-    return;
-  }
-  if(state.modal==="add"||state.modal==="edit"){
-    const h=state.modal==="edit"?state.holds.find(function(x){return x.id===state.editTarget;}):null;
-    wrap.innerHTML='<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal"><div class="modal-header"><span class="modal-title">'+(state.modal==="add"?"Add Customer to Hold":"Edit Hold")+'</span><button class="modal-close" onclick="closeModal()">×</button></div><div class="field"><label>Customer Name *</label><input type="text" id="fName" value="'+(h?esc(h.name):"")+'" placeholder="e.g. Acme Corp" autofocus/><div class="field-error" id="fNameErr"></div></div><div class="field"><label>Date Put on Hold *</label><input type="date" id="fDate" value="'+(h?h.date:today())+'"/><div class="field-error" id="fDateErr"></div></div><div class="field"><label>Reason / Note</label><textarea id="fReason" rows="3" placeholder="e.g. Invoice #1042 overdue 45 days">'+(h?esc(h.reason||""):"")+'</textarea></div><div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="doSave()">'+(state.modal==="add"?"Add to Hold List":"Save Changes")+'</button></div></div></div>';
-    return;
-  }
-  if(state.modal==="resolve"){
-    const h=state.holds.find(function(x){return x.id===state.resolveTarget;});
-    wrap.innerHTML='<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal"><div class="modal-header"><span class="modal-title">Mark as Resolved?</span><button class="modal-close" onclick="closeModal()">×</button></div><p style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.6"><strong>'+esc(h?h.name:"")+'</strong> will be removed from the active hold list.</p><div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-green" onclick="doResolve()">Yes, Mark Resolved</button></div></div></div>';
-    return;
-  }
-  if(state.modal==="delete"){
-    const h=state.holds.find(function(x){return x.id===state.deleteTarget;});
-    wrap.innerHTML='<div class="overlay" onclick="closeModalIfBg(event)"><div class="modal"><div class="modal-header"><span class="modal-title">Delete Entry?</span><button class="modal-close" onclick="closeModal()">×</button></div><p style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.6">Permanently delete <strong>'+esc(h?h.name:"")+'</strong>? This cannot be undone.</p><div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="doDelete()">Delete</button></div></div></div>';
-  }
-}
-function renderFooter(){
-  const el=document.getElementById("footerNote");
-  if(state.loading){el.style.display="none";return;}
-  el.style.display="block";
-  el.textContent=state.mode==="viewer"?"Read-only view — click a customer to see invoice details":"Admin mode — changes sync to Google Sheets automatically";
+
+  // Build cards using DOM — no inline onclick anywhere
+  var list = document.createElement("div");
+  list.className = "hold-list";
+
+  filtered.forEach(function(h) {
+    var isHold = h.status === "active";
+    var isExp = !!state.expanded[h.id];
+
+    var card = document.createElement("div");
+    card.className = "hold-card " + (isHold ? "on-hold" : "resolved");
+    card.setAttribute("data-id", h.id);
+
+    // Card header
+    var header = document.createElement("div");
+    header.className = "card-header";
+    header.onclick = function() {
+      state.expanded[h.id] = !state.expanded[h.id];
+      renderCards();
+    };
+
+    var accentBar = document.createElement("div");
+    accentBar.className = "accent-bar";
+
+    var cardBody = document.createElement("div");
+    cardBody.className = "card-body";
+
+    var cardTop = document.createElement("div");
+    cardTop.className = "card-top";
+
+    var nameEl = document.createElement("span");
+    nameEl.className = "customer-name";
+    nameEl.textContent = h.name;
+    cardTop.appendChild(nameEl);
+
+    var badgeEl = document.createElement("span");
+    badgeEl.className = "badge " + (isHold ? "badge-hold" : "badge-resolved");
+    var dot = document.createElement("span");
+    dot.className = "badge-dot";
+    badgeEl.appendChild(dot);
+    badgeEl.appendChild(document.createTextNode(isHold ? "On Hold" : "Resolved"));
+    cardTop.appendChild(badgeEl);
+
+    if (h.autoSynced) {
+      var autoTag = document.createElement("span");
+      autoTag.className = "badge badge-auto";
+      autoTag.textContent = "QB Synced";
+      cardTop.appendChild(autoTag);
+    }
+    if (h.totalOwed) {
+      var totalEl = document.createElement("span");
+      totalEl.style.cssText = "font-size:13px;font-weight:700;color:var(--red);margin-left:4px;";
+      totalEl.textContent = fmtMoney(h.totalOwed);
+      cardTop.appendChild(totalEl);
+    }
+    if (h.invoices && h.invoices.length) {
+      var hint = document.createElement("span");
+      hint.style.cssText = "font-size:12px;color:#aaa;margin-left:6px;";
+      hint.textContent = (isExp ? "▲ " : "▼ ") + h.invoices.length + " invoice" + (h.invoices.length !== 1 ? "s" : "");
+      cardTop.appendChild(hint);
+    }
+
+    var metaEl = document.createElement("div");
+    metaEl.className = "card-meta";
+    var dateSpan = document.createElement("span");
+    dateSpan.textContent = "📅 On hold since " + fmtDate(h.date);
+    metaEl.appendChild(dateSpan);
+    if (h.reason) {
+      var reasonSpan = document.createElement("span");
+      reasonSpan.textContent = "📝 " + h.reason;
+      metaEl.appendChild(reasonSpan);
+    }
+
+    cardBody.appendChild(cardTop);
+    cardBody.appendChild(metaEl);
+    header.appendChild(accentBar);
+    header.appendChild(cardBody);
+
+    // Admin action buttons
+    if (state.mode === "admin") {
+      var actions = document.createElement("div");
+      actions.className = "card-actions";
+
+      var editBtn = document.createElement("button");
+      editBtn.className = "btn btn-outline btn-sm";
+      editBtn.textContent = "Edit";
+      editBtn.onclick = function(ev){ ev.stopPropagation(); openEdit(h.id); };
+      actions.appendChild(editBtn);
+
+      if (isHold) {
+        var resBtn = document.createElement("button");
+        resBtn.className = "btn btn-sm";
+        resBtn.style.cssText = "background:#F6FFED;border:1px solid #B7EB8F;color:#27AE60;font-weight:600";
+        resBtn.textContent = "Resolve";
+        resBtn.onclick = function(ev){ ev.stopPropagation(); openResolve(h.id); };
+        actions.appendChild(resBtn);
+      }
+
+      var delBtn = document.createElement("button");
+      delBtn.className = "btn btn-danger btn-sm";
+      delBtn.textContent = "Delete";
+      delBtn.onclick = function(ev){ ev.stopPropagation(); openDelete(h.id); };
+      actions.appendChild(delBtn);
+
+      header.appendChild(actions);
+    }
+
+    card.appendChild(header);
+
+    // Invoice panel
+    if (h.invoices && h.invoices.length && isExp) {
+      var panel = document.createElement("div");
+      panel.className = "invoice-panel";
+      var table = document.createElement("table");
+      table.className = "invoice-table";
+      table.innerHTML = '<thead><tr><th>Invoice #</th><th>Date</th><th>Due Date</th><th>Aging</th><th style="text-align:right">Amount</th></tr></thead>';
+      var tbody = document.createElement("tbody");
+      h.invoices.forEach(function(inv) {
+        var chipClass = inv.agingBucket === ">90" ? "aging-90" : inv.agingBucket === "61-90" ? "aging-61" : "aging-31";
+        var tr = document.createElement("tr");
+        tr.innerHTML = '<td>' + esc(inv.invoiceNum||"—") + '</td><td>' + fmtDate(inv.date) + '</td><td>' + fmtDate(inv.dueDate) + '</td><td><span class="aging-chip ' + chipClass + '">' + inv.aging + ' days</span></td><td class="amount">' + fmtMoney(inv.amount) + '</td>';
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      panel.appendChild(table);
+      var tot = h.invoices.reduce(function(s,i){ return s + i.amount; }, 0);
+      var totRow = document.createElement("div");
+      totRow.className = "invoice-total";
+      totRow.textContent = "Total Overdue: " + fmtMoney(tot);
+      panel.appendChild(totRow);
+      card.appendChild(panel);
+    }
+
+    list.appendChild(card);
+  });
+
+  wrap.innerHTML = "";
+  wrap.appendChild(list);
 }
 
-function setFilter(f){state.filter=f;renderTabs();renderCards();}
-function onSearch(val){state.search=val;renderTabs();renderCards();}
-function openModal(t){state.modal=t;renderModal();}
-function closeModal(){state.modal=null;state.editTarget=null;state.syncPreview=null;renderModal();}
-function closeModalIfBg(e){if(e.target.classList.contains("overlay"))closeModal();}
-function openEdit(id){state.editTarget=id;state.modal="edit";renderModal();}
-function openResolve(id){state.resolveTarget=id;state.modal="resolve";renderModal();}
-function openDelete(id){state.deleteTarget=id;state.modal="delete";renderModal();}
-function signOut(){state.mode="viewer";render();showToast("Signed out of admin mode");}
-function doLogin(){
-  const pw=document.getElementById("pwInput")?document.getElementById("pwInput").value:"";
-  if(pw===ADMIN_PASSWORD){state.mode="admin";state.modal=null;render();showToast("Welcome, Admin!");}
-  else{const e=document.getElementById("pwError");if(e)e.textContent="Incorrect password.";}
+function renderModal() {
+  var wrap = document.getElementById("modalWrap");
+  wrap.innerHTML = "";
+  if (!state.modal) return;
+
+  var overlay = document.createElement("div");
+  overlay.className = "overlay";
+  overlay.onclick = function(e){ if (e.target === overlay) closeModal(); };
+
+  var modal = document.createElement("div");
+  modal.className = "modal";
+
+  if (state.modal === "syncPreview") {
+    var nh = state.syncPreview.newHolds;
+    var total = nh.reduce(function(s,h){ return s+(h.totalOwed||0); }, 0);
+    modal.innerHTML = '<div class="modal-header"><span class="modal-title">QuickBooks Sync Preview</span><button class="modal-close" id="mClose">&#215;</button></div>' +
+      '<div class="warning-box">&#x26A0;&#xFE0F; <strong>Fresh Start:</strong> This replaces your entire hold list with ' + nh.length + ' customers from QuickBooks.</div>' +
+      '<p style="font-size:13px;color:#666;margin-bottom:10px;">Importing <strong>' + nh.length + '</strong> customers — total: <strong>' + fmtMoney(total) + '</strong></p>' +
+      '<div class="sync-preview">' + nh.map(function(h){ return '<div class="sync-item"><span class="sync-dot"></span><span><strong>' + esc(h.name) + '</strong> — ' + h.invoices.length + ' invoice' + (h.invoices.length!==1?"s":"") + ' — ' + fmtMoney(h.totalOwed) + '</span></div>'; }).join("") + '</div>' +
+      '<div class="modal-actions"><button class="btn btn-outline" id="mCancel">Cancel</button><button class="btn btn-blue" id="mApply">Replace &amp; Import</button></div>';
+  } else if (state.modal === "login") {
+    modal.innerHTML = '<div class="modal-header"><span class="modal-title">Admin Login</span><button class="modal-close" id="mClose">&#215;</button></div>' +
+      '<div class="field"><label>Password</label><input type="password" id="pwInput" placeholder="Enter admin password"/><div class="field-error" id="pwError"></div></div>' +
+      '<div class="modal-actions"><button class="btn btn-outline" id="mCancel">Cancel</button><button class="btn btn-primary" id="mLogin">Sign In</button></div>';
+  } else if (state.modal === "add" || state.modal === "edit") {
+    var h = state.modal === "edit" ? state.holds.find(function(x){ return x.id === state.editTarget; }) : null;
+    modal.innerHTML = '<div class="modal-header"><span class="modal-title">' + (state.modal==="add"?"Add Customer to Hold":"Edit Hold") + '</span><button class="modal-close" id="mClose">&#215;</button></div>' +
+      '<div class="field"><label>Customer Name *</label><input type="text" id="fName" value="' + (h?esc(h.name):"") + '" placeholder="e.g. Acme Corp"/><div class="field-error" id="fNameErr"></div></div>' +
+      '<div class="field"><label>Date Put on Hold *</label><input type="date" id="fDate" value="' + (h?h.date:todayStr()) + '"/><div class="field-error" id="fDateErr"></div></div>' +
+      '<div class="field"><label>Reason / Note</label><textarea id="fReason" rows="3" placeholder="e.g. Invoice #1042 overdue">' + (h?esc(h.reason||""):"") + '</textarea></div>' +
+      '<div class="modal-actions"><button class="btn btn-outline" id="mCancel">Cancel</button><button class="btn btn-primary" id="mSave">' + (state.modal==="add"?"Add to Hold List":"Save Changes") + '</button></div>';
+  } else if (state.modal === "resolve") {
+    var h = state.holds.find(function(x){ return x.id === state.resolveTarget; });
+    modal.innerHTML = '<div class="modal-header"><span class="modal-title">Mark as Resolved?</span><button class="modal-close" id="mClose">&#215;</button></div>' +
+      '<p style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.6"><strong>' + esc(h?h.name:"") + '</strong> will be removed from the active hold list.</p>' +
+      '<div class="modal-actions"><button class="btn btn-outline" id="mCancel">Cancel</button><button class="btn btn-green" id="mResolve">Yes, Mark Resolved</button></div>';
+  } else if (state.modal === "delete") {
+    var h = state.holds.find(function(x){ return x.id === state.deleteTarget; });
+    modal.innerHTML = '<div class="modal-header"><span class="modal-title">Delete Entry?</span><button class="modal-close" id="mClose">&#215;</button></div>' +
+      '<p style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.6">Permanently delete <strong>' + esc(h?h.name:"") + '</strong>?</p>' +
+      '<div class="modal-actions"><button class="btn btn-outline" id="mCancel">Cancel</button><button class="btn btn-primary" id="mDelete">Delete</button></div>';
+  }
+
+  overlay.appendChild(modal);
+  wrap.appendChild(overlay);
+
+  // Wire up modal buttons via DOM (no inline onclick)
+  var mc = document.getElementById("mClose");   if(mc) mc.onclick = closeModal;
+  var mcan = document.getElementById("mCancel"); if(mcan) mcan.onclick = closeModal;
+  var mapply = document.getElementById("mApply"); if(mapply) mapply.onclick = applySync;
+  var mlogin = document.getElementById("mLogin"); if(mlogin) mlogin.onclick = doLogin;
+  var msave = document.getElementById("mSave");  if(msave) msave.onclick = doSave;
+  var mres = document.getElementById("mResolve"); if(mres) mres.onclick = doResolve;
+  var mdel = document.getElementById("mDelete"); if(mdel) mdel.onclick = doDelete;
+  var pwi = document.getElementById("pwInput");
+  if(pwi) { pwi.addEventListener("keydown", function(e){ if(e.key==="Enter") doLogin(); }); pwi.focus(); }
+  var fni = document.getElementById("fName"); if(fni) fni.focus();
 }
-async function doSave(){
-  const name=(document.getElementById("fName")?document.getElementById("fName").value:"").trim();
-  const date=document.getElementById("fDate")?document.getElementById("fDate").value:"";
-  const reason=(document.getElementById("fReason")?document.getElementById("fReason").value:"").trim();
-  const ne=document.getElementById("fNameErr"),de=document.getElementById("fDateErr");
-  let ok=true;
-  if(!name){if(ne)ne.textContent="Customer name is required.";ok=false;}else{if(ne)ne.textContent="";}
-  if(!date){if(de)de.textContent="Date is required.";ok=false;}else{if(de)de.textContent="";}
-  if(!ok)return;
-  const isAdd=state.modal==="add";
-  if(isAdd)state.holds.push({id:uid(),name:name,date:date,reason:reason,status:"active"});
-  else state.holds=state.holds.map(function(h){return h.id===state.editTarget?Object.assign({},h,{name:name,date:date,reason:reason}):h;});
-  state.modal=null;state.editTarget=null;render();
-  await persist(isAdd?name+" added to hold list":"Entry updated");
+
+function renderFooter() {
+  var el = document.getElementById("footerNote");
+  if (state.loading) { el.style.display = "none"; return; }
+  el.style.display = "block";
+  el.textContent = state.mode === "viewer" ? "Read-only view — click a customer to see invoice details" : "Admin mode — changes sync to Google Sheets automatically";
 }
-async function doResolve(){
-  const h=state.holds.find(function(x){return x.id===state.resolveTarget;});
-  state.holds=state.holds.map(function(x){return x.id===state.resolveTarget?Object.assign({},x,{status:"resolved"}):x;});
-  state.modal=null;render();
-  await persist((h?h.name:"Customer")+" marked as resolved");
-}
-async function doDelete(){
-  const h=state.holds.find(function(x){return x.id===state.deleteTarget;});
-  state.holds=state.holds.filter(function(x){return x.id!==state.deleteTarget;});
-  state.modal=null;render();
-  await persist((h?h.name:"Entry")+" deleted");
-}
-async function persist(successMsg){
-  const bar=document.getElementById("syncBar");
-  bar.style.display="block";
-  try{
-    await saveHolds(state.holds);
-    bar.style.display="none";
-    showToast(successMsg||"Saved!");
-    renderHeader();renderStatusBar();renderTabs();
-  }catch(err){
-    bar.style.display="none";
-    showToast("Save failed — check your connection","error");
-    console.error(err);
+
+// ── ACTIONS ──────────────────────────────────────────────────
+function openModal(t) { state.modal = t; renderModal(); }
+function closeModal() { state.modal = null; state.editTarget = null; state.syncPreview = null; renderModal(); }
+function openEdit(id) { state.editTarget = id; state.modal = "edit"; renderModal(); }
+function openResolve(id) { state.resolveTarget = id; state.modal = "resolve"; renderModal(); }
+function openDelete(id) { state.deleteTarget = id; state.modal = "delete"; renderModal(); }
+
+function doLogin() {
+  var pw = document.getElementById("pwInput") ? document.getElementById("pwInput").value : "";
+  if (pw === ADMIN_PASSWORD) {
+    state.mode = "admin"; state.modal = null; render(); showToast("Welcome, Admin!");
+  } else {
+    var e = document.getElementById("pwError"); if(e) e.textContent = "Incorrect password.";
   }
 }
-window.addEventListener("DOMContentLoaded",async function(){
+
+function doSave() {
+  var name = (document.getElementById("fName") ? document.getElementById("fName").value : "").trim();
+  var date = document.getElementById("fDate") ? document.getElementById("fDate").value : "";
+  var reason = (document.getElementById("fReason") ? document.getElementById("fReason").value : "").trim();
+  var ne = document.getElementById("fNameErr"), de = document.getElementById("fDateErr");
+  var ok = true;
+  if (!name) { if(ne) ne.textContent = "Name required."; ok = false; } else { if(ne) ne.textContent = ""; }
+  if (!date) { if(de) de.textContent = "Date required."; ok = false; } else { if(de) de.textContent = ""; }
+  if (!ok) return;
+  var isAdd = state.modal === "add";
+  if (isAdd) state.holds.push({id:uid(), name:name, date:date, reason:reason, status:"active"});
+  else state.holds = state.holds.map(function(h){ return h.id===state.editTarget ? {id:h.id,name:name,date:date,reason:reason,status:h.status,invoices:h.invoices,totalOwed:h.totalOwed,autoSynced:h.autoSynced} : h; });
+  state.modal = null; state.editTarget = null; render();
+  persist(isAdd ? name + " added to hold list" : "Entry updated");
+}
+
+function doResolve() {
+  var h = state.holds.find(function(x){ return x.id === state.resolveTarget; });
+  state.holds = state.holds.map(function(x){ return x.id===state.resolveTarget ? Object.assign({},x,{status:"resolved"}) : x; });
+  state.modal = null; render();
+  persist((h?h.name:"Customer") + " marked as resolved");
+}
+
+function doDelete() {
+  var h = state.holds.find(function(x){ return x.id === state.deleteTarget; });
+  state.holds = state.holds.filter(function(x){ return x.id !== state.deleteTarget; });
+  state.modal = null; render();
+  persist((h?h.name:"Entry") + " deleted");
+}
+
+function persist(successMsg) {
+  var bar = document.getElementById("syncBar");
+  bar.style.display = "block";
+  saveHolds(state.holds).then(function(){
+    bar.style.display = "none";
+    showToast(successMsg || "Saved!");
+    renderHeader(); renderStatusBar(); renderTabs();
+  }).catch(function(err){
+    bar.style.display = "none";
+    showToast("Save failed — check your connection", "error");
+    console.error(err);
+  });
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", function() {
   render();
-  try{state.holds=await fetchHolds();}
-  catch(err){console.error(err);showToast("Could not load data","error");}
-  state.loading=false;
-  render();
+  fetchHolds().then(function(holds){
+    state.holds = holds;
+    state.loading = false;
+    render();
+  }).catch(function(err){
+    console.error(err);
+    showToast("Could not load data", "error");
+    state.loading = false;
+    render();
+  });
 });
 </script>
 </body>
