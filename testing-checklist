@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlassTrax Update Testing Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f4f2ee;
+    --surface: #ffffff;
+    --surface2: #f9f8f6;
+    --border: #dddbd6;
+    --border2: #c8c6c0;
+    --text: #1a1917;
+    --text2: #5a5856;
+    --text3: #8a8884;
+    --accent: #1a5fa8;
+    --accent-light: #e8f0fa;
+    --success: #1a7a3c;
+    --success-light: #e8f5ed;
+    --success-border: #a3d4b5;
+    --warn: #8a5a00;
+    --warn-light: #fdf4e3;
+    --check-active: #1a5fa8;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  header {
+    max-width: 720px;
+    margin: 0 auto 2.5rem;
+    border-bottom: 2px solid var(--text);
+    padding-bottom: 1.25rem;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo-area h1 {
+    font-family: var(--mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .logo-area h1 span {
+    color: var(--accent);
+  }
+
+  .logo-area p {
+    font-size: 0.78rem;
+    color: var(--text3);
+    margin-top: 4px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .version-entry {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .version-entry label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+  }
+
+  .version-entry input {
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 6px 12px;
+    border: 1.5px solid var(--border2);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--text);
+    width: 160px;
+    text-align: center;
+    transition: border-color 0.15s;
+  }
+
+  .version-entry input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .version-entry input::placeholder {
+    color: var(--text3);
+    font-weight: 400;
+  }
+
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .checklist-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .checklist-header {
+    background: var(--text);
+    color: #fff;
+    padding: 0.6rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+  }
+
+  .checklist-item {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    align-items: start;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+    cursor: pointer;
+  }
+
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-item:hover { background: var(--surface2); }
+  .checklist-item.checked { background: var(--success-light); }
+  .checklist-item.checked:hover { background: #ddf0e4; }
+
+  .check-col {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 14px;
+    padding-left: 4px;
+  }
+
+  .check-box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border2);
+    border-radius: 3px;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .checklist-item.checked .check-box {
+    background: var(--success);
+    border-color: var(--success);
+  }
+
+  .check-mark {
+    display: none;
+    color: #fff;
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 600;
+  }
+
+  .checklist-item.checked .check-mark { display: block; }
+
+  .item-content {
+    padding: 12px 1.25rem 12px 0;
+  }
+
+  .item-num {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 2px;
+  }
+
+  .item-title {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+
+  .checklist-item.checked .item-title {
+    color: var(--success);
+    text-decoration: line-through;
+    text-decoration-color: #7cc49a;
+  }
+
+  .item-subs {
+    font-size: 0.78rem;
+    color: var(--text3);
+    line-height: 1.6;
+  }
+
+  .notes-row {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .notes-row:last-child { border-bottom: none; }
+
+  .notes-inner {
+    padding: 4px 1.25rem 10px 0;
+  }
+
+  .notes-inner label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .notes-inner textarea {
+    width: 100%;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 6px 8px;
+    resize: vertical;
+    min-height: 48px;
+    line-height: 1.5;
+    transition: border-color 0.15s;
+  }
+
+  .notes-inner textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .notes-inner textarea::placeholder { color: var(--text3); }
+
+  .progress-bar-wrap {
+    margin-bottom: 2rem;
+  }
+
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+
+  .progress-meta span {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+  }
+
+  .progress-meta strong {
+    font-family: var(--mono);
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .progress-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  .progress-fill.complete { background: var(--success); }
+
+  .submit-area {
+    margin-bottom: 3rem;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .btn-submit {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 10px 24px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .btn-submit:hover { opacity: 0.85; }
+  .btn-submit:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-submit.ready { background: var(--success); }
+
+  .submit-hint {
+    font-size: 0.78rem;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  .tested-section h2 {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    margin-bottom: 1rem;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tested-empty {
+    font-size: 0.82rem;
+    color: var(--text3);
+    font-style: italic;
+  }
+
+  .tested-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tested-pill {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 14px;
+    background: var(--success-light);
+    color: var(--success);
+    border: 1px solid var(--success-border);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tested-pill .pill-check {
+    width: 14px;
+    height: 14px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #fff;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .tested-pill .pill-date {
+    font-size: 0.68rem;
+    color: #4a9a68;
+    font-weight: 400;
+    margin-left: 2px;
+  }
+
+  .new-test-btn {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: none;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 5px 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: background 0.15s;
+  }
+
+  .new-test-btn:hover { background: var(--accent-light); }
+
+  .alert {
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-family: var(--mono);
+    display: none;
+    margin-bottom: 1rem;
+  }
+
+  .alert.warn { background: var(--warn-light); color: var(--warn); border: 1px solid #f0d080; display: block; }
+  .alert.success { background: var(--success-light); color: var(--success); border: 1px solid var(--success-border); display: block; }
+
+  @media (max-width: 500px) {
+    .header-top { flex-direction: column; }
+    .version-entry { align-items: flex-start; }
+    .version-entry input { width: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo-area">
+      <h1>Glass<span>Trax</span></h1>
+      <p>Update Testing Checklist</p>
+    </div>
+    <div class="version-entry">
+      <label for="version-input">Version being tested</label>
+      <input type="text" id="version-input" placeholder="e.g. 4.2.1" maxlength="20" autocomplete="off" />
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="alert" id="alert-box"></div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-meta">
+      <span>Progress</span>
+      <strong id="progress-text">0 / 9</strong>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="checklist-card">
+    <div class="checklist-header">Core Functionality</div>
+
+    <div class="checklist-item" data-idx="0" onclick="toggleItem(0)">
+      <div class="check-col"><div class="check-box"><span class="check-mark">✓</span></div></div>
+      <div class="item-content">
+        <div class="item-num">01</div>
+        <div class="item-title">Quote &amp; Order Entry</div>
+        <div class="item-subs">Entering notes · Process codes · Line items · Pricing</div>
+      </div>
+    </div>
+    <div class="notes-row">
+      <div></div>
+      <div class="notes-inner">
+        <label>Notes</label>
+        <textarea placeholder="Observations, issues, or pass confirmation..." onclick="event.stopPropagation()"></textarea>
+      </div>
+    </div>
+
+    <div class="checklist-item" data-idx="1" onclick="toggleItem(1)">
+      <div class="check-col"><div class="check-box"><span class="check-mark">✓</span></div></div>
+      <div class="item-content">
+        <div class="item-num">02</div>
+        <div class="item-title">Lookup — Quotes, Orders, Customers, Items &amp; Pricing</div>
+        <div class="item-subs">Search/browse · Filter · Open records · Price lookups</div>
+      </div>
+    </div>
+    <div class="notes-row">
+      <div></div>
+      <div class="notes-inner">
+        <label>Notes</label>
+        <textarea placeholder="Observations, issues, or pass confirmation..." onclick="event.stopPropagation()"></textarea>
+      </div>
+    </div>
+
+    <div class="checklist-item" data-idx="2" onclick="toggleItem(2)">
+      <div class="check-col"><div class="check-box"><span class="check-mark">✓</span></div></div>
+      <div class="item-content">
+        <div class="item-num">03</div>
+        <div class="item-title">Create / Edit Customers &amp; Vendors</div>
+        <div class="item-subs">New records · Edit existing · Address, terms, contacts</div>
+      </div>
+    </div>
+    <div class="notes-row">
+      <div></div>
+      <div class="notes-inner">
+        <label>Notes</label>
+        <textarea placeholder="Observations, issues, or pass confirmation..." onclick="event.stopPropagation()"></textarea>
+      </div>
+    </div>
+
+    <div class="checklist-item" data-idx="3" onclick="toggleItem(3)">
+      <div class="check-col"><div class="check-box"><span class="check-mark">✓</span></div></div>
+      <div class="item-content">
+        <div class="item-num">04</div>
+        <div class="item-title">Create / Receive Purchase Orders</div>
+        <div class="item-subs">New PO · Line items · Partial &amp; full receiving</div>
+      </div>
+    </div>
+    <div class="notes-row">
+      <div></div>
+      <div class="notes-inner">
+        <label>Notes</label>
+        <textarea placeholder="Observations, issues, or pass confirmation..." onclick="event.stopPropagation()"></textarea>
+      </div>
+    </div>
+
+    <div class="checklist-item" data-idx="4" onclick="toggleItem(4)">
+      <div class="check-col"><div class="check-box"><span class="check-mark">✓</span></div></div>
+      <div class="item-content">
+        <div class="item-num">05</div>
+        <div class="item-title">Create / Post PO Invoice</div>
+        <div class="item-subs">Match to PO · Post to AP · GL impact</div>
+      </div>
+    </div>
+    <div class="notes-row">
+      <div></div>
+      <div class="notes-inner">
+        <label>Notes</label>
+        <textarea placeholder="Observations, issues, or pass confirmation..." onclick="event.stopPropagation()"></textarea>
+      </div>
+    </div>
+
+    <div class="checklist-item" data-idx="5" onclick="toggleItem(5)">
+      <div class="check-col"><div class="check-box"><span class="check-mark">✓</span></div></div>
+      <div class="item-content">
+        <div class="item-num">06</div>
+        <div class="item-title">Pay Bills</div>
+        <div class="item-subs">Select invoices · Payment entry · Check/ACH · GL posting</div>
+      </div>
+    </div>
+    <div class="notes-row">
+      <div></div>
+      <div class="notes-inner">
+        <label>Notes</label>
+        <textarea placeholder="Observations, issues, or pass confirmation..." onclick="event.stopPropagation()"></textarea>
+      </div>
+    </div>
+
+    <div class="checklist-item" data-idx="6" onclick="toggleItem(6)">
+      <div class="check-col"><div class="check-box"><span class="check-mark">✓</span></div></div>
+      <div class="item-content">
+        <div class="item-num">07</div>
+        <div class="item-title">Create / Post / Email Invoices</div>
+        <div class="item-subs">Generate invoice · Post to AR · Email delivery</div>
+      </div>
+    </div>
+    <div class="notes-row">
+      <div></div>
+      <div class="notes-inner">
+        <label>Notes</label>
+        <textarea placeholder="Observations, issues, or pass confirmation..." onclick="event.stopPropagation()"></textarea>
+      </div>
+    </div>
+
+    <div class="checklist-item" data-idx="7" onclick="toggleItem(7)">
+      <div class="check-col"><div class="check-box"><span class="check-mark">✓</span></div></div>
+      <div class="item-content">
+        <div class="item-num">08</div>
+        <div class="item-title">Create / Post General Ledger Transactions</div>
+        <div class="item-subs">Manual JEs · Account selection · Period posting · Trial balance</div>
+      </div>
+    </div>
+    <div class="notes-row">
+      <div></div>
+      <div class="notes-inner">
+        <label>Notes</label>
+        <textarea placeholder="Observations, issues, or pass confirmation..." onclick="event.stopPropagation()"></textarea>
+      </div>
+    </div>
+
+    <div class="checklist-item" data-idx="8" onclick="toggleItem(8)">
+      <div class="check-col"><div class="check-box"><span class="check-mark">✓</span></div></div>
+      <div class="item-content">
+        <div class="item-num">09</div>
+        <div class="item-title">New Features / Functions in This Version</div>
+        <div class="item-subs">All items listed in release notes verified</div>
+      </div>
+    </div>
+    <div class="notes-row" style="border-bottom:none;">
+      <div></div>
+      <div class="notes-inner">
+        <label>Notes — list new features tested</label>
+        <textarea style="min-height:72px;" placeholder="Describe each new feature tested and the result..." onclick="event.stopPropagation()"></textarea>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="submit-area">
+    <button class="btn-submit" id="submit-btn" disabled onclick="markTested()">Mark as Tested</button>
+    <span class="submit-hint" id="submit-hint">Enter a version number and check all 9 items</span>
+  </div>
+
+  <div class="tested-section">
+    <h2>Tested Versions</h2>
+    <div id="tested-empty" class="tested-empty">No versions marked tested yet.</div>
+    <div class="tested-list" id="tested-list"></div>
+  </div>
+
+</main>
+
+<script>
+  const STORAGE_KEY = 'glasstrax_tested_versions';
+  const checked = new Array(9).fill(false);
+
+  function toggleItem(idx) {
+    checked[idx] = !checked[idx];
+    const row = document.querySelector(`.checklist-item[data-idx="${idx}"]`);
+    row.classList.toggle('checked', checked[idx]);
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const count = checked.filter(Boolean).length;
+    const fill = document.getElementById('progress-fill');
+    const text = document.getElementById('progress-text');
+    fill.style.width = (count / 9 * 100) + '%';
+    fill.classList.toggle('complete', count === 9);
+    text.textContent = count + ' / 9';
+    updateSubmit();
+  }
+
+  function updateSubmit() {
+    const version = document.getElementById('version-input').value.trim();
+    const allChecked = checked.every(Boolean);
+    const btn = document.getElementById('submit-btn');
+    const hint = document.getElementById('submit-hint');
+    const ready = version.length > 0 && allChecked;
+    btn.disabled = !ready;
+    btn.classList.toggle('ready', ready);
+    if (!version) hint.textContent = 'Enter a version number to begin';
+    else if (!allChecked) hint.textContent = (9 - checked.filter(Boolean).length) + ' item(s) remaining';
+    else hint.textContent = 'All items complete — ready to mark as tested';
+  }
+
+  function markTested() {
+    const version = document.getElementById('version-input').value.trim();
+    if (!version) return;
+
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    if (stored.find(v => v.version === version)) {
+      showAlert('Version ' + version + ' is already in the tested list.', 'warn');
+      return;
+    }
+
+    const entry = { version, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) };
+    stored.push(entry);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+    renderTested();
+    showAlert('Version ' + version + ' marked as tested!', 'success');
+
+    setTimeout(() => {
+      document.getElementById('version-input').value = '';
+      checked.fill(false);
+      document.querySelectorAll('.checklist-item').forEach(r => r.classList.remove('checked'));
+      document.querySelectorAll('textarea').forEach(t => t.value = '');
+      updateProgress();
+      document.getElementById('alert-box').style.display = 'none';
+    }, 2000);
+  }
+
+  function renderTested() {
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    const list = document.getElementById('tested-list');
+    const empty = document.getElementById('tested-empty');
+    if (stored.length === 0) {
+      empty.style.display = 'block';
+      list.innerHTML = '';
+      return;
+    }
+    empty.style.display = 'none';
+    list.innerHTML = stored.map(v =>
+      `<div class="tested-pill">
+        <div class="pill-check">✓</div>
+        v${v.version}
+        <span class="pill-date">${v.date}</span>
+      </div>`
+    ).join('');
+  }
+
+  function showAlert(msg, type) {
+    const box = document.getElementById('alert-box');
+    box.textContent = msg;
+    box.className = 'alert ' + type;
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  document.getElementById('version-input').addEventListener('input', updateSubmit);
+
+  renderTested();
+  updateProgress();
+</script>
+</body>
+</html>
